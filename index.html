@@ -186,7 +186,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-07-18 22:18:26 / 修改时间：22:21:12" itemprop="dateCreated datePublished" datetime="2020-07-18T22:18:26+08:00">2020-07-18</time>
+              <time title="创建时间：2020-07-18 22:18:26 / 修改时间：22:53:32" itemprop="dateCreated datePublished" datetime="2020-07-18T22:18:26+08:00">2020-07-18</time>
             </span>
 
           
@@ -200,36 +200,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="本篇教程介绍如何将数据库的数据导入Karam，生成RDF"><a href="#本篇教程介绍如何将数据库的数据导入Karam，生成RDF" class="headerlink" title="本篇教程介绍如何将数据库的数据导入Karam，生成RDF"></a>本篇教程介绍如何将数据库的数据导入Karam，生成RDF</h2><h3 id="1-下载Karam，启动并用浏览器打开Karam的页面"><a href="#1-下载Karam，启动并用浏览器打开Karam的页面" class="headerlink" title="1.  下载Karam，启动并用浏览器打开Karam的页面"></a>1.  下载Karam，启动并用浏览器打开Karam的页面</h3><blockquote>
-<p><a href="https://usc-isi-i2.github.io/karma/" target="_blank" rel="noopener">Karam官网</a></p>
-<p><a href="https://github.com/usc-isi-i2/Web-Karma/wiki/Installation" target="_blank" rel="noopener">Karma安装教程</a></p>
-</blockquote>
-<h3 id="2-点击页面顶部的Import，选择数据库导入，填入连接数据库的信息，导入要处理的表"><a href="#2-点击页面顶部的Import，选择数据库导入，填入连接数据库的信息，导入要处理的表" class="headerlink" title="2.  点击页面顶部的Import，选择数据库导入，填入连接数据库的信息，导入要处理的表"></a>2.  点击页面顶部的Import，选择数据库导入，填入连接数据库的信息，导入要处理的表</h3><blockquote>
-<p>由于我是把数据存放在数据库中，因此我选择数据库导入数据，你也可以选择文件导入的方法。</p>
-<p>注意事项：确保已经启动数据库；如果你是导入<code>json</code>，<code>csv</code>，<code>xml</code>等类型的数据，要将文件放在<code>/karma/user-uploaded-files</code>中。</p>
-<p>下图是我karam的目录</p>
-</blockquote>
-<p><img src="https://raw.githubusercontent.com/zhouliqi/image/master/img/karam%E7%9B%AE%E5%BD%95.jpg" alt=""></p>
-<h3 id="3-导入这个表的Ontology，可以使用Protege来构建本体模型"><a href="#3-导入这个表的Ontology，可以使用Protege来构建本体模型" class="headerlink" title="3.  导入这个表的Ontology，可以使用Protege来构建本体模型"></a>3.  导入这个表的Ontology，可以使用Protege来构建本体模型</h3><blockquote>
-<p>你需要在Protege中设置表的<code>Class</code>，<code>Object properties</code>，<code>Data properties</code>。</p>
-<p><code>Object properties</code>表示<code>Class</code>之间的关系，<code>Data properties</code>表示<code>Class</code>的属性；数据属性相当于树的叶子节点，只有入度，而没有出度；然后保存文件。</p>
-<p><code>Protege</code><a href="https://protege.stanford.edu/" target="_blank" rel="noopener">下载链接</a></p>
-</blockquote>
-<h3 id="4-然后在Karam中设置每一列Semantic-Types，Class之间的Linking"><a href="#4-然后在Karam中设置每一列Semantic-Types，Class之间的Linking" class="headerlink" title="4.  然后在Karam中设置每一列Semantic Types，Class之间的Linking"></a>4.  然后在Karam中设置每一列Semantic Types，Class之间的Linking</h3><blockquote>
-<p>注意：在设置某一列的Semantic Types时要对应本体模型的<code>Class</code>和<code>properties</code>。</p>
-<p>下图是我构建好的一个例子。</p>
-</blockquote>
-<p><img src="https://raw.githubusercontent.com/zhouliqi/image/master/img/20200717213245.png" alt=""></p>
-<h3 id="5-构建完成后点击Publish导出RDF和R2RML-Model"><a href="#5-构建完成后点击Publish导出RDF和R2RML-Model" class="headerlink" title="5. 构建完成后点击Publish导出RDF和R2RML Model"></a>5. 构建完成后点击Publish导出RDF和R2RML Model</h3><blockquote>
-<p>导出的R2RML文件需要放在<code>/karma/user-uploaded-files</code>中，下次打开该表时点击</p>
-<p><code>Apply R2RML Model -&gt; from file</code>应用这个模型，就不需要再设置列的<code>Semantic Types</code>和<code>Class</code>的<code>Linking</code>。</p>
-</blockquote>
-<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ol>
-<li><a href="https://howto.acdh.oeaw.ac.at/blog/mapping-mysql-database-to-rdf-with-karma/" target="_blank" rel="noopener">Mapping MySQL database to RDF with Karma</a></li>
-<li><a href="https://xxwywzy.github.io/2019/07/18/protege/" target="_blank" rel="noopener">OWL 本体构建指南</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/32389370" target="_blank" rel="noopener">本体建模 知乎: SimmerChan</a></li>
-</ol>
-
+          <h2 id="本篇教程介绍如何将数据库的数据导入Karam，生成RDF"><a href="#本篇教程介绍如何将数据库的数据导入Karam，生成RDF" class="headerlink" title="本篇教程介绍如何将数据库的数据导入Karam，生成RDF"></a>本篇教程介绍如何将数据库的数据导入Karam，生成RDF</h2>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/07/18/use-karam/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
