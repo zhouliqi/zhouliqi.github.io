@@ -129,30 +129,31 @@
     <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Lab-system-calls"><span class="toc-text">Lab: system calls</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#System-call-tracing-moderate"><span class="toc-text">System call tracing (moderate)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Sysino"><span class="toc-text">Sysino</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#测试"><span class="toc-text">测试</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Lab-system-calls"><span class="toc-text">Lab: system calls</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#System-call-tracing-moderate"><span class="toc-text">System call tracing (moderate)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#实验描述"><span class="toc-text">实验描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#提示"><span class="toc-text">提示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实验步骤"><span class="toc-text">实验步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Sysino"><span class="toc-text">Sysino</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#实验描述-1"><span class="toc-text">实验描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实验步骤-1"><span class="toc-text">实验步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结-1"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试"><span class="toc-text">测试</span></a></li></ol></li></ol>
     </div>
   </div><div class="post-content"><p>本文记录了 Lab: system calls 的解题过程。</p>
 <a id="more"></a>
 
-<h2 id="Lab-system-calls"><a href="#Lab-system-calls" class="headerlink" title="Lab: system calls"></a><a href="https://pdos.csail.mit.edu/6.828/2020/labs/syscall.html" target="_blank" rel="noopener">Lab: system calls</a></h2><p>进入 xv6-labs-2020 目录， 执行</p>
+<h1 id="Lab-system-calls"><a href="#Lab-system-calls" class="headerlink" title="Lab: system calls"></a><a href="https://pdos.csail.mit.edu/6.828/2020/labs/syscall.html" target="_blank" rel="noopener">Lab: system calls</a></h1><p>进入 xv6-labs-2020 目录， 执行</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git fetch</span><br><span class="line">git checkout syscall</span><br><span class="line">make clean</span><br></pre></td></tr></table></figure>
 
 
 
-<h3 id="System-call-tracing-moderate"><a href="#System-call-tracing-moderate" class="headerlink" title="System call tracing (moderate)"></a>System call tracing (<a href="https://pdos.csail.mit.edu/6.828/2020/labs/guidance.html" target="_blank" rel="noopener">moderate</a>)</h3><p>描述：实现一个 <code>trace(int mask)</code> 的系统调用。它的参数为 <code>mask</code>，<strong><code>mask</code> 指定了哪些系统调用会被打印</strong>。例如，为了跟踪 <code>fork</code> 系统调用，程序可以调用 <code>trace(1 &lt;&lt; SYS_fork)</code> （其中，<code>SYS_fork</code> 定义在 <em>kernel/syscall.h</em> 中，表示 <code>fork</code> 系统调用的编号）。修改 xv6 kernel 代码，使得如果某一个系统调用的编号在 mask 中对应的位为 1 时，在系统调用返回前，将该信息打印出来。每一行应该包含进程的 id，系统调用的名字以及返回值。</p>
-<p>思路：根据 Lab 的教程，仔细阅读下面六个文件中相关的代码</p>
+<h2 id="System-call-tracing-moderate"><a href="#System-call-tracing-moderate" class="headerlink" title="System call tracing (moderate)"></a>System call tracing (<a href="https://pdos.csail.mit.edu/6.828/2020/labs/guidance.html" target="_blank" rel="noopener">moderate</a>)</h2><h3 id="实验描述"><a href="#实验描述" class="headerlink" title="实验描述"></a>实验描述</h3><blockquote>
+<p>实现一个 <code>trace(int mask)</code> 的系统调用。它的参数为 <code>mask</code>，<strong><code>mask</code> 指定了哪些系统调用会被打印</strong>。例如，为了跟踪 <code>fork</code> 系统调用，程序可以调用 <code>trace(1 &lt;&lt; SYS_fork)</code> （其中，<code>SYS_fork</code> 定义在 <em>kernel/syscall.h</em> 中，表示 <code>fork</code> 系统调用的编号）。修改 xv6 kernel 代码，使得如果某一个系统调用的编号在 mask 中对应的位为 1 时，在系统调用返回前，将该信息打印出来。每一行应该包含进程的 id，系统调用的名字以及返回值。</p>
+</blockquote>
+<h3 id="提示"><a href="#提示" class="headerlink" title="提示"></a>提示</h3><p>根据 Lab 的教程，仔细阅读下面六个文件中相关的代码</p>
 <ul>
 <li>The user-space code for systems calls is in <em>user/user.h</em> and <em>user/usys.pl</em></li>
 <li>The kernel-space code is <em>kernel/syscall.h</em>, <em>kernel/syscall.c</em></li>
 <li>The process-related code is <em>kernel/proc.h</em> and <em>kernel/proc.c</em></li>
 </ul>
 <p>然后在根据提示修改对应文件中的代码。</p>
-<p>总结：由于 mask 这个没理解清楚，导致打印了很多没用的进程信息。比如，mask = 2 = $(10)_2$ = (1 &lt;&lt; 1)，说明我们只需要跟踪 fork 这个系统调用（fork 系统调用的编号为 1）。mask = 32 = $(100000)_2$ = (1 &lt;&lt; 5)，说明我们只需要跟踪 read 这个系统调用。当 mask = 2147583647 = $2^{31}-1$，即 31 个 1，所以我们跟踪所有进程。即：mask 的二进制数从左向右数（最左边为第 0 位），第   n 位为 1 时，说明我们要打印第 n 个系统调用的信息。</p>
-<ul>
-<li>打开目录中的 Makefile 文件，在 UPROGS 中添加：$U/_trace</li>
-</ul>
-<ul>
-<li>对 trace 进行定义。首先在 <em>user/user.h</em> 文件中添加 <code>trace()</code> 系统调用的声明</li>
+<h3 id="实验步骤"><a href="#实验步骤" class="headerlink" title="实验步骤"></a>实验步骤</h3><ul>
+<li><p>打开目录中的 Makefile 文件，在 UPROGS 中添加：<code>$U/_trace</code></p>
+</li>
+<li><p>对 trace 进行定义。首先在 <em>user/user.h</em> 文件中添加 <code>trace()</code> 系统调用的声明</p>
+</li>
 </ul>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// system calls</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">trace</span><span class="params">(<span class="keyword">int</span>)</span></span>;</span><br></pre></td></tr></table></figure>
 
@@ -161,8 +162,6 @@
 
 <p>最后在 <em>kernel/syscall.h</em> 中给它增加一个编号</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SYS_trace  22</span></span><br></pre></td></tr></table></figure>
-
-
 
 <ul>
 <li>在 <em>kernel/sysproc.c</em> 文件中添加函数 <code>sys_trace()</code>，它的功能是读取 <code>trace()</code> 传进来的参数 <code>mask</code>，然后保存到 <code>proc</code> 结构体（定义在 <em>kernel/proc.h</em>）中的新增的变量中。</li>
@@ -181,12 +180,13 @@
 </ul>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="function"><span class="keyword">extern</span> uint64 <span class="title">sys_trace</span><span class="params">(<span class="keyword">void</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="title">uint64</span> <span class="params">(*syscalls[])</span><span class="params">(<span class="keyword">void</span>)</span> </span>= &#123;</span><br><span class="line">...</span><br><span class="line">[SYS_trace]   sys_trace,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 为了打印方便，设置一个系统调用名的字符串数组</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">char</span> *syscall_name[] = &#123;<span class="string">"fork"</span>, <span class="string">"exit"</span>, <span class="string">"wait"</span>, <span class="string">"pipe"</span>, <span class="string">"read"</span>, <span class="string">"kill"</span>, <span class="string">"exec"</span>,</span><br><span class="line"><span class="string">"fstat"</span>, <span class="string">"chdir"</span>, <span class="string">"dup"</span>, <span class="string">"getpid"</span>, <span class="string">"sbrk"</span>, <span class="string">"sleep"</span>, <span class="string">"uptime"</span>, <span class="string">"open"</span>, <span class="string">"write"</span>, </span><br><span class="line"><span class="string">"mknod"</span>, <span class="string">"unlink"</span>, <span class="string">"link"</span>, <span class="string">"mkdir"</span>, <span class="string">"close"</span>, <span class="string">"trace"</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span></span><br><span class="line">syscall(<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">int</span> num;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">proc</span> *<span class="title">p</span> = <span class="title">myproc</span>();</span></span><br><span class="line"></span><br><span class="line">  num = p-&gt;trapframe-&gt;a7;</span><br><span class="line">  <span class="keyword">if</span>(num &gt; <span class="number">0</span> &amp;&amp; num &lt; NELEM(syscalls) &amp;&amp; syscalls[num]) &#123;</span><br><span class="line">    p-&gt;trapframe-&gt;a0 = syscalls[num]();</span><br><span class="line">    <span class="comment">//process execute the system call, by mask, print system call name </span></span><br><span class="line">    <span class="keyword">if</span> (p-&gt;mask &amp; (<span class="number">1</span> &lt;&lt; num)) &#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">"%d: syscall %s -&gt; %d\n"</span>, p-&gt;pid, syscall_name[num - <span class="number">1</span>], p-&gt;trapframe-&gt;a0);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d %s: unknown sys call %d\n"</span>,</span><br><span class="line">            p-&gt;pid, p-&gt;name, num);</span><br><span class="line">    p-&gt;trapframe-&gt;a0 = <span class="number">-1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-
-
-
-
-<h3 id="Sysino"><a href="#Sysino" class="headerlink" title="Sysino"></a>Sysino</h3><p>​    该实验需要我们实现一个 sysinfo 的系统调用，它将收集系统的信息。它接收一个指向 <code>struct sysinfo</code>（<em>kernel/sysinfo.h</em>）的指针。然后会将当前系统的剩余内存的字节数保存在字段 freemem 中，设置 nproc 为进程状态不为 UNUSED 的个数。</p>
-<ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><blockquote>
+<p>由于 <code>mask</code> 没理解清楚，导致打印了很多没用的信息。比如，mask = 2 = $(10)_2$ = (1 &lt;&lt; 1)，说明我们只需要跟踪 fork 这个系统调用（fork 系统调用的编号为 1）。mask = 32 = $(100000)_2$ = (1 &lt;&lt; 5)，说明我们只需要跟踪 read 这个系统调用。当 mask = 2147583647 = $2^{31}-1$，即 31 个 1，所以我们跟踪所有进程。即：mask 的二进制数从左向右数（最左边为第 0 位），第   n 位为 1 时，说明我们要打印第 n 个系统调用的信息。</p>
+</blockquote>
+<h2 id="Sysino"><a href="#Sysino" class="headerlink" title="Sysino"></a>Sysino</h2><h3 id="实验描述-1"><a href="#实验描述-1" class="headerlink" title="实验描述"></a>实验描述</h3><blockquote>
+<p>该实验需要我们实现一个 sysinfo 的系统调用，它将收集系统的信息。它接收一个指向 <code>struct sysinfo</code>（<em>kernel/sysinfo.h</em>）的指针。然后会将当前系统的剩余内存的字节数保存在字段 freemem 中，设置 nproc 为进程状态不为 UNUSED 的个数。</p>
+</blockquote>
+<h3 id="实验步骤-1"><a href="#实验步骤-1" class="headerlink" title="实验步骤"></a>实验步骤</h3><ul>
 <li><p>打开目录中的 Makefile 文件，在 UPROGS 中添加：<code>$U/_sysinfo</code></p>
 </li>
 <li><p>对 <code>sysinfo</code> 进行定义。首先在 <em>user/user.h</em> 文件中添加 sysinfo 系统调用以及 <code>sysinfo</code> 结构体的声明</p>
@@ -224,7 +224,10 @@
 
 
 
-<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./grade-lab-syscall trace</span><br></pre></td></tr></table></figure>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><blockquote>
+<p>一定要仔细阅读、理解提示中让你看的源码文件</p>
+</blockquote>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./grade-lab-syscall trace</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./grade-lab-syscall sysinfotest</span><br></pre></td></tr></table></figure>
 
