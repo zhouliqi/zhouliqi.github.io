@@ -16,7 +16,10 @@
 <meta name="description" content="MIT6.S081实验环境配置"/><meta name="keywords" content="xv6-labs, 陪你倒数's blog" /><link rel="alternate" href="/default" title="陪你倒数's blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
 <link rel="canonical" href="http://yoursite.com/2021/03/17/MIT6-S081实验环境配置/"/>
 
-<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" /><script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
 
 <script id="baidu_analytics">
@@ -42,7 +45,7 @@
 })();
 </script>
 <script>
-  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":"","latex":false};
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":"","latex":true};
 </script>
 
     <title>MIT6.S081实验环境配置 - 陪你倒数's blog</title>
@@ -129,7 +132,7 @@
     <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#课程地址：6-S081-Fall-2020"><span class="toc-text">课程地址：6.S081 &#x2F; Fall 2020</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实验环境搭建"><span class="toc-text">实验环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#VMware-16-Ubuntu-20-04-2-0-LTS"><span class="toc-text">VMware 16 + Ubuntu 20.04.2.0 LTS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#测试是否环境安装成功"><span class="toc-text">测试是否环境安装成功</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#克隆仓库-xv6-labs-2020"><span class="toc-text">克隆仓库 xv6-labs-2020</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#进入到-xv6-仓库到目录下，安装-qemu"><span class="toc-text">进入到 xv6 仓库到目录下，安装 qemu</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#课程地址：6-S081-Fall-2020"><span class="toc-text">课程地址：6.S081 &#x2F; Fall 2020</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实验环境搭建"><span class="toc-text">实验环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#VMware-16-Ubuntu-20-04-2-0-LTS"><span class="toc-text">VMware 16 + Ubuntu 20.04.2.0 LTS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#测试是否环境安装成功"><span class="toc-text">测试是否环境安装成功</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#克隆仓库-xv6-labs-2020"><span class="toc-text">克隆仓库 xv6-labs-2020</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#进入到-xv6-仓库到目录下，安装-qemu"><span class="toc-text">进入到 xv6 仓库到目录下，安装 qemu</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#调试"><span class="toc-text">调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol></li></ol>
     </div>
   </div><div class="post-content"><p>本文记录了搭建 6.S081：Operating System Engineering 课程的实验环境</p>
 <a id="more"></a>
@@ -182,8 +185,21 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">xv6 kernel is booting</span><br><span class="line"></span><br><span class="line">hart 1 starting</span><br><span class="line">hart 2 starting</span><br><span class="line">init: starting sh</span><br></pre></td></tr></table></figure>
 
 <p>则说明 MIT 6.S081 课程的实验环境搭建完成了，可以开始做实验了。</p>
+<h3 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h3><ol>
+<li>配置用户根目录下的 <code>.gdbinit</code> 文件（如果该文件，则创建），在 <code>.gdbinit</code> 中输入</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set architecture riscv:rv64</span><br><span class="line">target remote lovalhost:26000</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>首先打开一个终端，输入 <code>make qemu-gdb</code>，然后在另一个终端输入 <code>gdb-multiarch kernel/kernel</code> 进行测试</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">b _entry</span><br><span class="line">c</span><br></pre></td></tr></table></figure>
+
+
+
 <h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
 <li><a href="https://zhuanlan.zhihu.com/p/343655412" target="_blank" rel="noopener">MIT 6.S081: Lab 0 搭建环境</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/331492444" target="_blank" rel="noopener">MIT 6.S081 2020 操作系统 实验环境搭配详解及问题处理</a></li>
 </ul>
 
       </div>
@@ -193,13 +209,8 @@
             <a href="/tags/xv6-labs/">xv6-labs</a>
             </div>
         
-        <nav class="post-nav"><a class="prev" href="/2021/03/28/Labs-Xv6-and-utilities/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">Labs Xv6 and Unix utilities</span>
-        <span class="prev-text nav-mobile">上一篇</span>
-      </a>
-    <a class="next" href="/2020/07/18/use-karam/">
-        <span class="next-text nav-default">karam的使用</span>
+        <nav class="post-nav"><a class="next" href="/2020/08/01/%E8%80%83%E7%A0%94%E7%BB%8F%E9%AA%8C/">
+        <span class="next-text nav-default">考研经验</span>
         <span class="prev-text nav-mobile">下一篇</span>
         <i class="iconfont icon-right"></i>
       </a>
