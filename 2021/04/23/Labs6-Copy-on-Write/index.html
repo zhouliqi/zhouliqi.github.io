@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="Labs6-Copy-on-Write"/><meta name="keywords" content="xv6-labs, 陪你倒数's blog" /><link rel="alternate" href="/default" title="陪你倒数's blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="http://yoursite.com/2021/04/23/Labs6-Copy-on-Write/"/>
+
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" /><script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?6539a88b962d52ff1bf51dd22e11cce2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":"","latex":true};
+</script>
+
+    <title>Labs6-Copy-on-Write - 陪你倒数's blog</title>
+  <meta name="generator" content="Hexo 4.2.1"></head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">陪你倒数's blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">陪你倒数's blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/categories/">
+            分类
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">Labs6-Copy-on-Write
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2021-04-23
+        </span><span class="post-category">
+            <a href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/">课程学习</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Lab-Copy-on-Write-Fork-for-xv6"><span class="toc-text">Lab: Copy-on-Write Fork for xv6</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#根据实验的提示"><span class="toc-text">根据实验的提示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#需要更新的文件"><span class="toc-text">需要更新的文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Diff"><span class="toc-text">Diff</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#测试"><span class="toc-text">测试</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div><div class="post-content"><blockquote>
+<p>本文记录了 Lab: Copy-on-Write Fork for xv6 的解题过程</p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="Lab-Copy-on-Write-Fork-for-xv6"><a href="#Lab-Copy-on-Write-Fork-for-xv6" class="headerlink" title="Lab: Copy-on-Write Fork for xv6"></a><a href="https://pdos.csail.mit.edu/6.828/2020/labs/cow.html" target="_blank" rel="noopener">Lab: Copy-on-Write Fork for xv6</a></h1><blockquote>
+<p>为 xv6 实现 Copy-on-Write Fork 功能</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git fetch</span><br><span class="line">checkout cow</span><br><span class="line">make clean</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="根据实验的提示"><a href="#根据实验的提示" class="headerlink" title="根据实验的提示"></a>根据实验的提示</h3><blockquote>
+<ul>
+<li><p>在 <em>kernel/kalloc.c</em> 文件中用一个数组跟踪每个空闲页的引用计数。在 kalloc() 函数中设置分配页面的引用计数为 1，然后在 <code>fork() -&gt; uvmcopy()</code> 中，当子进程引用了某个页面，这个页面的引用计数加 1；在 <code>kfree</code> 函数中，先对这页的引用计数减 1，当减为 0 时，说明这页应该被释放。</p>
+</li>
+<li><p>在 <em>kernel/vm.c</em> 中，将 <code>uvmcopy</code> 函数中分配内存相关代码放到我们定义的函数 <code>copyonwrite</code> 中，实现当进程想对一个 COW 页进行写操作时，会触发 page fault，然后在 <code>usertrap</code> 中调用 <code>copyonwrite</code> 函数来分配一个新的物理页。<code>copyonwrite</code> 函数会检查虚拟地址 va 是否大于 MAXVA、它所在的页的 PTE_U 是否为 1（因为不允许访问内核的物理页面）、这个页面是否是 COW 页。然后才分配内存</p>
+</li>
+<li><p>在 <code>copyout</code> 函数中，对于虚拟地址 va0，我们需要像处理 COW page fault 来处理 va0，然后再继续下面的代码。</p>
+</li>
+<li><p>去掉 <code>mappages</code> 函数中的 <code>panic(&quot;remap&quot;);</code></p>
+</li>
+</ul>
+</blockquote>
+<h3 id="需要更新的文件"><a href="#需要更新的文件" class="headerlink" title="需要更新的文件"></a>需要更新的文件</h3><ol>
+<li><em>kernel/defs.h</em></li>
+<li><em>kernel/riscv.h</em></li>
+<li><em>kernel/kalloc.c</em></li>
+<li><em>kernel/trap.c</em></li>
+<li><em>kernel/vm.c</em></li>
+</ol>
+<h3 id="Diff"><a href="#Diff" class="headerlink" title="Diff"></a>Diff</h3><figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br></pre></td><td class="code"><pre><span class="line">diff --git a/kernel/defs.h b/kernel/defs.h</span><br><span class="line">index 4b9bbc0..76060bb 100644</span><br><span class="line"><span class="comment">--- a/kernel/defs.h</span></span><br><span class="line"><span class="comment">+++ b/kernel/defs.h</span></span><br><span class="line">@@ -63,6 +63,7 @@ void            ramdiskrw(struct buf*);</span><br><span class="line"> void*           kalloc(void);</span><br><span class="line"> void            kfree(void *);</span><br><span class="line"> void            kinit(void);</span><br><span class="line"><span class="addition">+void            increfcount(uint64);</span></span><br><span class="line"> </span><br><span class="line"> // log.c</span><br><span class="line"> void            initlog(int, struct superblock*);</span><br><span class="line">@@ -171,6 +172,7 @@ uint64          walkaddr(pagetable_t, uint64);</span><br><span class="line"> int             copyout(pagetable_t, uint64, char *, uint64);</span><br><span class="line"> int             copyin(pagetable_t, char *, uint64, uint64);</span><br><span class="line"> int             copyinstr(pagetable_t, char *, uint64, uint64);</span><br><span class="line"><span class="addition">+int             copyonwrite(pagetable_t, uint64);</span></span><br><span class="line"> </span><br><span class="line"> // plic.c</span><br><span class="line"> void            plicinit(void);</span><br><span class="line">diff --git a/kernel/kalloc.c b/kernel/kalloc.c</span><br><span class="line">index fa6a0ac..39c84eb 100644</span><br><span class="line"><span class="comment">--- a/kernel/kalloc.c</span></span><br><span class="line"><span class="comment">+++ b/kernel/kalloc.c</span></span><br><span class="line">@@ -13,6 +13,7 @@ void freerange(void *pa_start, void *pa_end);</span><br><span class="line"> </span><br><span class="line"> extern char end[]; // first address after kernel.</span><br><span class="line">                    // defined by kernel.ld.</span><br><span class="line"><span class="addition">+int refcount[(PHYSTOP - KERNBASE) / PGSIZE]; // reference count</span></span><br><span class="line"> </span><br><span class="line"> struct run &#123;</span><br><span class="line">   struct run *next;</span><br><span class="line">@@ -50,7 +51,11 @@ kfree(void *pa)</span><br><span class="line"> </span><br><span class="line">   if(((uint64)pa % PGSIZE) != 0 || (char*)pa &lt; end || (uint64)pa &gt;= PHYSTOP)</span><br><span class="line">     panic("kfree");</span><br><span class="line"><span class="deletion">-</span></span><br><span class="line"><span class="addition">+  // minus reference count, if it equal 0, then we should free this page</span></span><br><span class="line"><span class="addition">+  if(--refcount[((uint64)pa - KERNBASE) / PGSIZE] &gt; 0)&#123; </span></span><br><span class="line"><span class="addition">+    return;</span></span><br><span class="line"><span class="addition">+  &#125;</span></span><br><span class="line"><span class="addition">+  refcount[((uint64)pa - KERNBASE) / PGSIZE] = 0;</span></span><br><span class="line">   // Fill with junk to catch dangling refs.</span><br><span class="line">   memset(pa, 1, PGSIZE);</span><br><span class="line"> </span><br><span class="line">@@ -78,5 +83,11 @@ kalloc(void)</span><br><span class="line"> </span><br><span class="line">   if(r)</span><br><span class="line">     memset((char*)r, 5, PGSIZE); // fill with junk</span><br><span class="line"><span class="addition">+  if(r)</span></span><br><span class="line"><span class="addition">+    refcount[((uint64)r - KERNBASE) / PGSIZE] = 1;</span></span><br><span class="line">   return (void*)r;</span><br><span class="line"> &#125;</span><br><span class="line"><span class="addition">+void increfcount(uint64 pa)</span></span><br><span class="line"><span class="addition">+&#123;</span></span><br><span class="line"><span class="addition">+  refcount[(pa - KERNBASE) / PGSIZE]++;</span></span><br><span class="line"><span class="addition">+&#125;</span></span><br><span class="line">\ No newline at end of file</span><br><span class="line">diff --git a/kernel/riscv.h b/kernel/riscv.h</span><br><span class="line">index 0aec003..25e253d 100644</span><br><span class="line"><span class="comment">--- a/kernel/riscv.h</span></span><br><span class="line"><span class="comment">+++ b/kernel/riscv.h</span></span><br><span class="line">@@ -331,6 +331,7 @@ sfence_vma()</span><br><span class="line"> #define PTE_W (1L &lt;&lt; 2)</span><br><span class="line"> #define PTE_X (1L &lt;&lt; 3)</span><br><span class="line"> #define PTE_U (1L &lt;&lt; 4) // 1 -&gt; user can access</span><br><span class="line"><span class="addition">+#define PTE_COW (1L &lt;&lt; 8) // the page is COW</span></span><br><span class="line"> </span><br><span class="line"> // shift a physical address to the right place for a PTE.</span><br><span class="line"> #define PA2PTE(pa) ((((uint64)pa) &gt;&gt; 12) &lt;&lt; 10)</span><br><span class="line">diff --git a/kernel/trap.c b/kernel/trap.c</span><br><span class="line">index a63249e..5d06c78 100644</span><br><span class="line"><span class="comment">--- a/kernel/trap.c</span></span><br><span class="line"><span class="comment">+++ b/kernel/trap.c</span></span><br><span class="line">@@ -67,6 +67,12 @@ usertrap(void)</span><br><span class="line">     syscall();</span><br><span class="line">   &#125; else if((which_dev = devintr()) != 0)&#123;</span><br><span class="line">     // ok</span><br><span class="line"><span class="addition">+  &#125; else if (r_scause() == 13 || r_scause() == 15)&#123;</span></span><br><span class="line"><span class="addition">+    // page faults, then call Copy-on-Write handler it.</span></span><br><span class="line"><span class="addition">+    uint64 va = r_stval();</span></span><br><span class="line"><span class="addition">+    if(copyonwrite(myproc()-&gt;pagetable, va) == -1)&#123;</span></span><br><span class="line"><span class="addition">+      p-&gt;killed = 1;</span></span><br><span class="line"><span class="addition">+    &#125;</span></span><br><span class="line">   &#125; else &#123;</span><br><span class="line">     printf("usertrap(): unexpected scause %p pid=%d\n", r_scause(), p-&gt;pid);</span><br><span class="line">     printf("            sepc=%p stval=%p\n", r_sepc(), r_stval());</span><br><span class="line">diff --git a/kernel/vm.c b/kernel/vm.c</span><br><span class="line">index bccb405..07e3412 100644</span><br><span class="line"><span class="comment">--- a/kernel/vm.c</span></span><br><span class="line"><span class="comment">+++ b/kernel/vm.c</span></span><br><span class="line">@@ -157,7 +157,7 @@ mappages(pagetable_t pagetable, uint64 va, uint64 size, uint64 pa, int perm)</span><br><span class="line">     if((pte = walk(pagetable, a, 1)) == 0)</span><br><span class="line">       return -1;</span><br><span class="line">     if(*pte &amp; PTE_V)</span><br><span class="line"><span class="deletion">-      panic("remap");</span></span><br><span class="line"><span class="addition">+      ;</span></span><br><span class="line">     *pte = PA2PTE(pa) | perm | PTE_V;</span><br><span class="line">     if(a == last)</span><br><span class="line">       break;</span><br><span class="line">@@ -311,7 +311,7 @@ uvmcopy(pagetable_t old, pagetable_t new, uint64 sz)</span><br><span class="line">   pte_t *pte;</span><br><span class="line">   uint64 pa, i;</span><br><span class="line">   uint flags;</span><br><span class="line"><span class="deletion">-  char *mem;</span></span><br><span class="line"> </span><br><span class="line">   for(i = 0; i &lt; sz; i += PGSIZE)&#123;</span><br><span class="line">     if((pte = walk(old, i, 0)) == 0)</span><br><span class="line">@@ -319,14 +319,14 @@ uvmcopy(pagetable_t old, pagetable_t new, uint64 sz)</span><br><span class="line">     if((*pte &amp; PTE_V) == 0)</span><br><span class="line">       panic("uvmcopy: page not present");</span><br><span class="line">     pa = PTE2PA(*pte);</span><br><span class="line"><span class="addition">+    *pte = (*pte &amp; (~PTE_W)) | PTE_COW; // clear PTE_W and set COW</span></span><br><span class="line">     flags = PTE_FLAGS(*pte);</span><br><span class="line"><span class="deletion">-    if((mem = kalloc()) == 0)</span></span><br><span class="line"><span class="deletion">-      goto err;</span></span><br><span class="line"><span class="deletion">-    memmove(mem, (char*)pa, PGSIZE);</span></span><br><span class="line"><span class="deletion">-    if(mappages(new, i, PGSIZE, (uint64)mem, flags) != 0)&#123;</span></span><br><span class="line"><span class="deletion">-      kfree(mem);</span></span><br><span class="line"><span class="addition">+    // map the parent's physical pages into the child, instead of allocating new pages</span></span><br><span class="line"><span class="addition">+    if(mappages(new, i, PGSIZE, pa, flags) != 0)&#123;</span></span><br><span class="line">       goto err;</span><br><span class="line">     &#125;</span><br><span class="line"><span class="addition">+    increfcount(pa); // the physical page reference count plus 1</span></span><br><span class="line">   &#125;</span><br><span class="line">   return 0;</span><br><span class="line"> </span><br><span class="line">@@ -358,6 +358,11 @@ copyout(pagetable_t pagetable, uint64 dstva, char *src, uint64 len)</span><br><span class="line"> </span><br><span class="line">   while(len &gt; 0)&#123;</span><br><span class="line">     va0 = PGROUNDDOWN(dstva);</span><br><span class="line"><span class="addition">+    // weather va0 is a COW VA? If not, then we do nothing</span></span><br><span class="line"><span class="addition">+    // otherwish, we execute COW, then map va0 to a new physical page.</span></span><br><span class="line"><span class="addition">+    if(copyonwrite(pagetable, va0) == -1)&#123;</span></span><br><span class="line"><span class="addition">+      return -1;</span></span><br><span class="line"><span class="addition">+    &#125;</span></span><br><span class="line">     pa0 = walkaddr(pagetable, va0);</span><br><span class="line">     if(pa0 == 0)</span><br><span class="line">       return -1;</span><br><span class="line">@@ -440,3 +445,30 @@ copyinstr(pagetable_t pagetable, char *dst, uint64 srcva, uint64 max)</span><br><span class="line">     return -1;</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br><span class="line"><span class="addition">+int</span></span><br><span class="line"><span class="addition">+copyonwrite(pagetable_t pagetable, uint64 va)</span></span><br><span class="line"><span class="addition">+&#123;</span></span><br><span class="line"><span class="addition">+  if(va &gt;= MAXVA)</span></span><br><span class="line"><span class="addition">+    return -1;</span></span><br><span class="line"><span class="addition">+  va = PGROUNDDOWN(va);</span></span><br><span class="line"><span class="addition">+  pte_t *pte = walk(pagetable, va, 0);</span></span><br><span class="line"><span class="addition">+  if(pte == 0 || (*pte &amp; PTE_V) == 0 || (*pte &amp; PTE_U) == 0)</span></span><br><span class="line"><span class="addition">+    return -1;</span></span><br><span class="line"><span class="addition">+  if((*pte &amp; PTE_COW) == 0) // not a COW page</span></span><br><span class="line"><span class="addition">+    return 0;</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+  uint64 pa = PTE2PA(*pte);</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+  char *mem = kalloc();</span></span><br><span class="line"><span class="addition">+  if(mem == 0)&#123; // no free physical memory, kill the process</span></span><br><span class="line"><span class="addition">+    return -1;</span></span><br><span class="line"><span class="addition">+  &#125;</span></span><br><span class="line"><span class="addition">+  memmove(mem, (char*)pa, PGSIZE);</span></span><br><span class="line"><span class="addition">+  kfree((void*)pa); // reference count minus 1</span></span><br><span class="line"><span class="addition">+  uint64 flags = PTE_FLAGS(*pte) &amp; (~PTE_COW);</span></span><br><span class="line"><span class="addition">+  if(mappages(pagetable, va, PGSIZE, (uint64)mem, flags | PTE_W) != 0)&#123;</span></span><br><span class="line"><span class="addition">+    kfree(mem);</span></span><br><span class="line"><span class="addition">+    return 0;</span></span><br><span class="line"><span class="addition">+  &#125;</span></span><br><span class="line"><span class="addition">+  return (uint64)mem;</span></span><br><span class="line"><span class="addition">+&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">make qemu</span><br><span class="line">cowtest</span><br><span class="line">usertests</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make grade</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+      </div>
+      
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/xv6-labs/">xv6-labs</a>
+            </div>
+        
+        <nav class="post-nav"><a class="next" href="/2021/04/18/Labs5-lazy-allocation/">
+        <span class="next-text nav-default">Lab xv6 lazy page allocation</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:zhouliqi1204@gmail.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://twitter.com/ML_zhouliqi" target="_blank" rel="noopener" class="iconfont icon-twitter" title="twitter"></a>
+        <a href="https://github.com/zhouliqi" target="_blank" rel="noopener" class="iconfont icon-github" title="github"></a>
+        <a href="https://www.zhihu.com/people/zhou-li-qi-78" target="_blank" rel="noopener" class="iconfont icon-zhihu" title="zhihu"></a>
+        <a href="https://instagram.com/zhou_liqi" target="_blank" rel="noopener" class="iconfont icon-instagram" title="instagram"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2020 - 2021<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">xiaozhou</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>
