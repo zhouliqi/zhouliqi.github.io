@@ -186,18 +186,12 @@
 <hr>
 <h2 id="Lazytests-and-Usertests-moderate"><a href="#Lazytests-and-Usertests-moderate" class="headerlink" title="Lazytests and Usertests (moderate)"></a>Lazytests and Usertests (<a href="https://pdos.csail.mit.edu/6.828/2020/labs/guidance.html" target="_blank" rel="noopener">moderate</a>)</h2><p>完善 Lazy memory allocator，使得可以通过 <code>lazytests</code> and <code>usertests</code></p>
 <ul>
-<li><p>在 <code>sbrk()</code> 中增加处理 <code>n</code> 为负数的情况，使用 <code>uvmdealloc</code> 函数减少进程的内存空间</p>
-</li>
-<li><p>如果发生缺页中断的虚拟地址高于 <code>p-&gt;sz</code>，则结束这个进程</p>
-</li>
-<li><p>修改 <code>fork()</code> 调用的 <code>uvmcopy</code>，当页表项不存在或者页无效时，不必发出 panic</p>
-</li>
-<li><p>处理当系统调用（<code>read/write</code>）访问了一个有效的地址，但这个地址的内存还没有被分配的情况。此时由于在内核中执行，不会进入 <code>usertrap</code> 处理这个 fault</p>
-</li>
-<li><p>当处理缺页中断时，如果 <code>kalloc</code> 没有剩余的内存可以分配时，结束当前进程</p>
-</li>
-<li><p>处理访问低于用户栈地址的无效页错误，用户栈地址在 <code>p-&gt;trapframe-&gt;sp</code></p>
-</li>
+<li>在 <code>sbrk()</code> 中增加处理 <code>n</code> 为负数的情况，使用 <code>uvmdealloc</code> 函数减少进程的内存空间</li>
+<li>如果发生缺页中断的虚拟地址高于 <code>p-&gt;sz</code>，则结束这个进程</li>
+<li>修改 <code>fork()</code> 调用的 <code>uvmcopy</code>，当页表项不存在或者页无效时，不必发出 panic</li>
+<li>处理当系统调用（<code>read/write</code>）访问了一个有效的地址，但这个地址的内存还没有被分配的情况。此时由于在内核中执行，不会进入 <code>usertrap</code> 处理这个 fault</li>
+<li>当处理缺页中断时，如果 <code>kalloc</code> 没有剩余的内存可以分配时，结束当前进程</li>
+<li>处理访问低于用户栈地址的无效页错误，用户栈地址在 <code>p-&gt;trapframe-&gt;sp</code></li>
 </ul>
 <h3 id="实验步骤-1"><a href="#实验步骤-1" class="headerlink" title="实验步骤"></a>实验步骤</h3><ol>
 <li>修改 <code>sbrk()</code></li>
@@ -250,7 +244,7 @@
         
         <nav class="post-nav"><a class="prev" href="/2021/04/23/Labs6-Copy-on-Write/">
         <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">Labs6-Copy-on-Write</span>
+        <span class="prev-text nav-default">Lab Copy-on-Write Fork for xv6</span>
         <span class="prev-text nav-mobile">上一篇</span>
       </a>
     <a class="next" href="/2021/04/17/Labs4-traps/">
