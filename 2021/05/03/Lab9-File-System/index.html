@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="Lab File System"/><meta name="keywords" content="xv6-labs, 陪你倒数's blog" /><link rel="alternate" href="/default" title="陪你倒数's blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="http://yoursite.com/2021/05/03/Lab9-File-System/"/>
+
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" /><script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?6539a88b962d52ff1bf51dd22e11cce2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":"","latex":true};
+</script>
+
+    <title>Lab File System - 陪你倒数's blog</title>
+  <meta name="generator" content="Hexo 4.2.1"></head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">陪你倒数's blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">陪你倒数's blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/categories/">
+            分类
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">Lab File System
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2021-05-03
+        </span><span class="post-category">
+            <a href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/">课程学习</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Lab-file-system"><span class="toc-text">Lab: file system</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#准备工作"><span class="toc-text">准备工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Large-files-moderate"><span class="toc-text">Large files (moderate)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#实验任务"><span class="toc-text">实验任务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实验思路"><span class="toc-text">实验思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实验测试"><span class="toc-text">实验测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Symbolic-links-moderate"><span class="toc-text">Symbolic links (moderate)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#实验任务-1"><span class="toc-text">实验任务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实验思路-1"><span class="toc-text">实验思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实验测试-1"><span class="toc-text">实验测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Lab-评测"><span class="toc-text">Lab 评测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Diff"><span class="toc-text">Diff</span></a></li></ol></li></ol>
+    </div>
+  </div><div class="post-content"><blockquote>
+<p>本文记录了 Lab: file system 的解题过程</p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="Lab-file-system"><a href="#Lab-file-system" class="headerlink" title="Lab: file system"></a><a href="https://pdos.csail.mit.edu/6.828/2020/labs/fs.html" target="_blank" rel="noopener">Lab: file system</a></h1><h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><blockquote>
+<p>阅读 xv6 book 的 “Chapter 8: File system” 和相关代码</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git fetch</span><br><span class="line">git checkout fs</span><br><span class="line">make clean</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Large-files-moderate"><a href="#Large-files-moderate" class="headerlink" title="Large files (moderate)"></a>Large files (<a href="https://pdos.csail.mit.edu/6.828/2020/labs/guidance.html" target="_blank" rel="noopener">moderate</a>)</h2><h3 id="实验任务"><a href="#实验任务" class="headerlink" title="实验任务"></a>实验任务</h3><blockquote>
+<p>在未修改的 xv6 系统中，最多支持 268 个 blocks，即 12 个 “direct” block 和 256 个 “indirect” block。为了支持大文件，我们需要修改 xv6 中管理 blocks 的代码，使得它支持 65803 个 blocks，即 11 个 “direct” block、256 个 “indirect” block 和 256 * 256 个 “doubly-indirect” block。</p>
+</blockquote>
+<h3 id="实验思路"><a href="#实验思路" class="headerlink" title="实验思路"></a>实验思路</h3><ul>
+<li>为了支持 doubly-indirect block，我们需要重新规划 <code>inode</code> 的 <code>addrs</code>。设定 <code>addrs[0] ~ addrs[10]</code> 索引 “direct” block，<code>addrs[11]</code> 索引 “indirect” block，<code>addrs[12]</code> 索引 “double-indirect” block</li>
+<li>修改相关的头文件：<em>fs.h<em>、</em>file.h</em></li>
+<li>参考 <code>bmap</code> 函数中查找 <code>bn</code> 在 “indirect” block 的情况，在它后面添加 <code>bn</code> 在 “double-indirect” block 的代码</li>
+<li>修改 <code>itrunc</code> 函数，使得它可以释放 “double-indirect” block</li>
+</ul>
+<h3 id="实验测试"><a href="#实验测试" class="headerlink" title="实验测试"></a>实验测试</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">make qemu</span><br><span class="line">bigfile</span><br><span class="line">usertests</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Symbolic-links-moderate"><a href="#Symbolic-links-moderate" class="headerlink" title="Symbolic links (moderate)"></a>Symbolic links (<a href="https://pdos.csail.mit.edu/6.828/2020/labs/guidance.html" target="_blank" rel="noopener">moderate</a>)</h2><h3 id="实验任务-1"><a href="#实验任务-1" class="headerlink" title="实验任务"></a>实验任务</h3><blockquote>
+<p>实现 xv6 的 symbolic link 的系统调用。符号链接就是在文件中保存指向文件的路径名，在打开文件的时候根据保存的路径名再去查找实际文件。</p>
+</blockquote>
+<h3 id="实验思路-1"><a href="#实验思路-1" class="headerlink" title="实验思路"></a>实验思路</h3><ul>
+<li>按照实验指导的提示，首先定义好 <code>symlink</code> 系统调用</li>
+<li>在 <em>kernel/stat.h</em> 中定义符号链接文件的类型 <code>T_SYMLINK</code>；在 <em>kernel/fcntl.h</em> 中定义标志位 <code>O_NOFOLLOW</code></li>
+<li>在 <em>kernel/sysfile.c</em> 中实现 <code>symlink</code> 系统调用，该函数会取出两个参数，<code>char target[MAXPATH], path[MAXPATH]</code>；然后创建 <code>inode</code>，将 <code>target</code> 写入 <code>inode</code> 的数据区</li>
+<li>修改 <code>open</code> 系统调用，处理路径引用符号链接这种情况。由于一个符号链接可能引用另一个符号链接，因此我们需要循环判断，直到文件的类型不是 <code>T_SYMLINK</code>；另外因为可能出现死循环，所以假定当循环次数超过 10 次时，我们也退出循环，返回错误标志。</li>
+</ul>
+<h3 id="实验测试-1"><a href="#实验测试-1" class="headerlink" title="实验测试"></a>实验测试</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">make qemu</span><br><span class="line">symlinktest</span><br><span class="line">usertests</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Lab-评测"><a href="#Lab-评测" class="headerlink" title="Lab 评测"></a>Lab 评测</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make grade</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Diff"><a href="#Diff" class="headerlink" title="Diff"></a>Diff</h2><figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br></pre></td><td class="code"><pre><span class="line">diff --git a/Makefile b/Makefile</span><br><span class="line">index d8509b1..7c258af 100644</span><br><span class="line"><span class="comment">--- a/Makefile</span></span><br><span class="line"><span class="comment">+++ b/Makefile</span></span><br><span class="line">@@ -175,6 +175,7 @@ UPROGS=\</span><br><span class="line"> 	$U/_grind\</span><br><span class="line"> 	$U/_wc\</span><br><span class="line"> 	$U/_zombie\</span><br><span class="line"><span class="addition">+	$U/_symlinktest\</span></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">diff --git a/kernel/fcntl.h b/kernel/fcntl.h</span><br><span class="line">index 44861b9..e5e38e3 100644</span><br><span class="line"><span class="comment">--- a/kernel/fcntl.h</span></span><br><span class="line"><span class="comment">+++ b/kernel/fcntl.h</span></span><br><span class="line"><span class="meta">@@ -3,3 +3,4 @@</span></span><br><span class="line"> #define O_RDWR    0x002</span><br><span class="line"> #define O_CREATE  0x200</span><br><span class="line"> #define O_TRUNC   0x400</span><br><span class="line"><span class="addition">+#define O_NOFOLLOW 0x800</span></span><br><span class="line">diff --git a/kernel/file.h b/kernel/file.h</span><br><span class="line">index b076d1d..5c4eb3a 100644</span><br><span class="line"><span class="comment">--- a/kernel/file.h</span></span><br><span class="line"><span class="comment">+++ b/kernel/file.h</span></span><br><span class="line">@@ -26,7 +26,7 @@ struct inode &#123;</span><br><span class="line">   short minor;</span><br><span class="line">   short nlink;</span><br><span class="line">   uint size;</span><br><span class="line"><span class="deletion">-  uint addrs[NDIRECT+1];</span></span><br><span class="line"><span class="addition">+  uint addrs[NDIRECT+2];</span></span><br><span class="line"> &#125;;</span><br><span class="line"> </span><br><span class="line"> // map major device number to device functions.</span><br><span class="line">diff --git a/kernel/fs.c b/kernel/fs.c</span><br><span class="line">index f33553a..a501e80 100644</span><br><span class="line"><span class="comment">--- a/kernel/fs.c</span></span><br><span class="line"><span class="comment">+++ b/kernel/fs.c</span></span><br><span class="line">@@ -380,6 +380,7 @@ bmap(struct inode *ip, uint bn)</span><br><span class="line">   uint addr, *a;</span><br><span class="line">   struct buf *bp;</span><br><span class="line"> </span><br><span class="line"><span class="addition">+  // bn in direct block. (0 &lt;= bn &lt;= 10)</span></span><br><span class="line">   if(bn &lt; NDIRECT)&#123;</span><br><span class="line">     if((addr = ip-&gt;addrs[bn]) == 0)</span><br><span class="line">       ip-&gt;addrs[bn] = addr = balloc(ip-&gt;dev);</span><br><span class="line">@@ -387,6 +388,7 @@ bmap(struct inode *ip, uint bn)</span><br><span class="line">   &#125;</span><br><span class="line">   bn -= NDIRECT;</span><br><span class="line"> </span><br><span class="line"><span class="addition">+  // bn in singly-indirect block. (11 &lt;= bn &lt;= 266)</span></span><br><span class="line">   if(bn &lt; NINDIRECT)&#123;</span><br><span class="line">     // Load indirect block, allocating if necessary.</span><br><span class="line">     if((addr = ip-&gt;addrs[NDIRECT]) == 0)</span><br><span class="line">@@ -400,6 +402,34 @@ bmap(struct inode *ip, uint bn)</span><br><span class="line">     brelse(bp);</span><br><span class="line">     return addr;</span><br><span class="line">   &#125;</span><br><span class="line"><span class="addition">+  bn -= NINDIRECT;</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+  // bn in double-indirect block. (267 &lt;= bn &lt;= 65863)</span></span><br><span class="line"><span class="addition">+  if(bn &lt; NDINDIRECT)&#123;</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+    // Load double-indirect block in inode, allocating if necessary.</span></span><br><span class="line"><span class="addition">+    if((addr = ip-&gt;addrs[NDIRECT + 1]) == 0)</span></span><br><span class="line"><span class="addition">+      ip-&gt;addrs[NDIRECT + 1] = addr = balloc(ip-&gt;dev);</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+    // read first indierct block</span></span><br><span class="line"><span class="addition">+    bp = bread(ip-&gt;dev, addr);</span></span><br><span class="line"><span class="addition">+    a = (uint*)bp-&gt;data;</span></span><br><span class="line"><span class="addition">+    if((addr = a[bn / NINDIRECT]) == 0)&#123;</span></span><br><span class="line"><span class="addition">+      a[bn / NINDIRECT] = addr = balloc(ip-&gt;dev);</span></span><br><span class="line"><span class="addition">+      log_write(bp);</span></span><br><span class="line"><span class="addition">+    &#125;</span></span><br><span class="line"><span class="addition">+    brelse(bp);</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+    // read last indirect block</span></span><br><span class="line"><span class="addition">+    bp = bread(ip-&gt;dev, addr);</span></span><br><span class="line"><span class="addition">+    a = (uint*)bp-&gt;data;</span></span><br><span class="line"><span class="addition">+    if((addr = a[bn % NINDIRECT]) == 0)&#123;</span></span><br><span class="line"><span class="addition">+      a[bn % NINDIRECT] = addr = balloc(ip-&gt;dev);</span></span><br><span class="line"><span class="addition">+      log_write(bp);</span></span><br><span class="line"><span class="addition">+    &#125;</span></span><br><span class="line"><span class="addition">+    brelse(bp);</span></span><br><span class="line"><span class="addition">+    return addr;</span></span><br><span class="line"><span class="addition">+  &#125;</span></span><br><span class="line"> </span><br><span class="line">   panic("bmap: out of range");</span><br><span class="line"> &#125;</span><br><span class="line">@@ -432,6 +462,29 @@ itrunc(struct inode *ip)</span><br><span class="line">     ip-&gt;addrs[NDIRECT] = 0;</span><br><span class="line">   &#125;</span><br><span class="line"> </span><br><span class="line"><span class="addition">+  if(ip-&gt;addrs[NDIRECT + 1])&#123;</span></span><br><span class="line"><span class="addition">+    bp = bread(ip-&gt;dev, ip-&gt;addrs[NDIRECT + 1]);</span></span><br><span class="line"><span class="addition">+    a = (uint*)bp-&gt;data;</span></span><br><span class="line"><span class="addition">+    struct buf *bpn;</span></span><br><span class="line"><span class="addition">+    uint* an;</span></span><br><span class="line"><span class="addition">+    for(int i = 0; i &lt; NINDIRECT; i++)&#123;</span></span><br><span class="line"><span class="addition">+      if(a[i])&#123;</span></span><br><span class="line"><span class="addition">+        bpn = bread(ip-&gt;dev, a[i]);</span></span><br><span class="line"><span class="addition">+        an = (uint*)bpn-&gt;data;</span></span><br><span class="line"><span class="addition">+        for(int j = 0; j &lt; NINDIRECT; j++)&#123;</span></span><br><span class="line"><span class="addition">+          if(an[j])</span></span><br><span class="line"><span class="addition">+            bfree(ip-&gt;dev, an[j]);</span></span><br><span class="line"><span class="addition">+        &#125;</span></span><br><span class="line"><span class="addition">+        brelse(bpn);</span></span><br><span class="line"><span class="addition">+        bfree(ip-&gt;dev, a[i]);</span></span><br><span class="line"><span class="addition">+        a[i] = 0;</span></span><br><span class="line"><span class="addition">+      &#125;</span></span><br><span class="line"><span class="addition">+    &#125;</span></span><br><span class="line"><span class="addition">+    brelse(bp);</span></span><br><span class="line"><span class="addition">+    bfree(ip-&gt;dev, ip-&gt;addrs[NDIRECT + 1]);</span></span><br><span class="line"><span class="addition">+    ip-&gt;addrs[NDIRECT + 1] = 0;</span></span><br><span class="line"><span class="addition">+  &#125;</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line">   ip-&gt;size = 0;</span><br><span class="line">   iupdate(ip);</span><br><span class="line"> &#125;</span><br><span class="line">diff --git a/kernel/fs.h b/kernel/fs.h</span><br><span class="line">index 139dcc9..4e1b332 100644</span><br><span class="line"><span class="comment">--- a/kernel/fs.h</span></span><br><span class="line"><span class="comment">+++ b/kernel/fs.h</span></span><br><span class="line">@@ -24,9 +24,10 @@ struct superblock &#123;</span><br><span class="line"> </span><br><span class="line"> #define FSMAGIC 0x10203040</span><br><span class="line"> </span><br><span class="line"><span class="deletion">-#define NDIRECT 12</span></span><br><span class="line"><span class="deletion">-#define NINDIRECT (BSIZE / sizeof(uint))</span></span><br><span class="line"><span class="deletion">-#define MAXFILE (NDIRECT + NINDIRECT)</span></span><br><span class="line"><span class="addition">+#define NDIRECT 11</span></span><br><span class="line"><span class="addition">+#define NINDIRECT (BSIZE / sizeof(uint)) // 256</span></span><br><span class="line"><span class="addition">+#define NDINDIRECT (BSIZE / sizeof(uint)) * (BSIZE / sizeof(uint)) // 256 * 256</span></span><br><span class="line"><span class="addition">+#define MAXFILE (NDIRECT + NINDIRECT + NDINDIRECT)</span></span><br><span class="line"> </span><br><span class="line"> // On-disk inode structure</span><br><span class="line"> struct dinode &#123;</span><br><span class="line">@@ -35,7 +36,7 @@ struct dinode &#123;</span><br><span class="line">   short minor;          // Minor device number (T_DEVICE only)</span><br><span class="line">   short nlink;          // Number of links to inode in file system</span><br><span class="line">   uint size;            // Size of file (bytes)</span><br><span class="line"><span class="deletion">-  uint addrs[NDIRECT+1];   // Data block addresses</span></span><br><span class="line"><span class="addition">+  uint addrs[NDIRECT+2];   // Data block addresses</span></span><br><span class="line"> &#125;;</span><br><span class="line"> </span><br><span class="line"> // Inodes per block.</span><br><span class="line">diff --git a/kernel/stat.h b/kernel/stat.h</span><br><span class="line">index 19543af..fe8ef73 100644</span><br><span class="line"><span class="comment">--- a/kernel/stat.h</span></span><br><span class="line"><span class="comment">+++ b/kernel/stat.h</span></span><br><span class="line"><span class="meta">@@ -1,6 +1,7 @@</span></span><br><span class="line"> #define T_DIR     1   // Directory</span><br><span class="line"> #define T_FILE    2   // File</span><br><span class="line"> #define T_DEVICE  3   // Device</span><br><span class="line"><span class="addition">+#define T_SYMLINK 4   // Symbolic Link</span></span><br><span class="line"> </span><br><span class="line"> struct stat &#123;</span><br><span class="line">   int dev;     // File system's disk device</span><br><span class="line">diff --git a/kernel/syscall.c b/kernel/syscall.c</span><br><span class="line">index c1b3670..1697b62 100644</span><br><span class="line"><span class="comment">--- a/kernel/syscall.c</span></span><br><span class="line"><span class="comment">+++ b/kernel/syscall.c</span></span><br><span class="line">@@ -104,6 +104,7 @@ extern uint64 sys_unlink(void);</span><br><span class="line"> extern uint64 sys_wait(void);</span><br><span class="line"> extern uint64 sys_write(void);</span><br><span class="line"> extern uint64 sys_uptime(void);</span><br><span class="line"><span class="addition">+extern uint64 sys_symlink(void);</span></span><br><span class="line"> </span><br><span class="line"> static uint64 (*syscalls[])(void) = &#123;</span><br><span class="line"> [SYS_fork]    sys_fork,</span><br><span class="line">@@ -127,6 +128,7 @@ static uint64 (*syscalls[])(void) = &#123;</span><br><span class="line"> [SYS_link]    sys_link,</span><br><span class="line"> [SYS_mkdir]   sys_mkdir,</span><br><span class="line"> [SYS_close]   sys_close,</span><br><span class="line"><span class="addition">+[SYS_symlink] sys_symlink,</span></span><br><span class="line"> &#125;;</span><br><span class="line"> </span><br><span class="line"> void</span><br><span class="line">diff --git a/kernel/syscall.h b/kernel/syscall.h</span><br><span class="line">index bc5f356..13818da 100644</span><br><span class="line"><span class="comment">--- a/kernel/syscall.h</span></span><br><span class="line"><span class="comment">+++ b/kernel/syscall.h</span></span><br><span class="line"><span class="meta">@@ -20,3 +20,4 @@</span></span><br><span class="line"> #define SYS_link   19</span><br><span class="line"> #define SYS_mkdir  20</span><br><span class="line"> #define SYS_close  21</span><br><span class="line"><span class="addition">+#define SYS_symlink 22</span></span><br><span class="line">diff --git a/kernel/sysfile.c b/kernel/sysfile.c</span><br><span class="line">index 5dc453b..b476ef7 100644</span><br><span class="line"><span class="comment">--- a/kernel/sysfile.c</span></span><br><span class="line"><span class="comment">+++ b/kernel/sysfile.c</span></span><br><span class="line">@@ -322,6 +322,30 @@ sys_open(void)</span><br><span class="line">     return -1;</span><br><span class="line">   &#125;</span><br><span class="line"> </span><br><span class="line"><span class="addition">+  if(ip-&gt;type == T_SYMLINK)&#123;</span></span><br><span class="line"><span class="addition">+    int level = 0;</span></span><br><span class="line"><span class="addition">+    char name[MAXPATH];</span></span><br><span class="line"><span class="addition">+    if(!(omode &amp; O_NOFOLLOW))&#123;</span></span><br><span class="line"><span class="addition">+      for(; level &lt; 10 &amp;&amp; ip-&gt;type == T_SYMLINK; level++)&#123;</span></span><br><span class="line"><span class="addition">+        memset(name, 0, MAXPATH);</span></span><br><span class="line"><span class="addition">+        readi(ip, 0, (uint64)name, 0, MAXPATH); // fetch path name saved in symbolic link file</span></span><br><span class="line"><span class="addition">+        iunlockput(ip);</span></span><br><span class="line"><span class="addition">+        // evaluate path and return the corresponding inode</span></span><br><span class="line"><span class="addition">+        // namei doesn't lock inode</span></span><br><span class="line"><span class="addition">+        if((ip = namei(name)) == 0)&#123;</span></span><br><span class="line"><span class="addition">+          end_op();</span></span><br><span class="line"><span class="addition">+          return -1;</span></span><br><span class="line"><span class="addition">+        &#125;</span></span><br><span class="line"><span class="addition">+        ilock(ip);</span></span><br><span class="line"><span class="addition">+      &#125;</span></span><br><span class="line"><span class="addition">+    &#125;</span></span><br><span class="line"><span class="addition">+    // the links form a cycle</span></span><br><span class="line"><span class="addition">+    if(level == 10)&#123;</span></span><br><span class="line"><span class="addition">+      iunlockput(ip);</span></span><br><span class="line"><span class="addition">+      end_op();</span></span><br><span class="line"><span class="addition">+      return -1;</span></span><br><span class="line"><span class="addition">+    &#125;</span></span><br><span class="line"><span class="addition">+  &#125;</span></span><br><span class="line">   if((f = filealloc()) == 0 || (fd = fdalloc(f)) &lt; 0)&#123;</span><br><span class="line">     if(f)</span><br><span class="line">       fileclose(f);</span><br><span class="line">@@ -484,3 +508,33 @@ sys_pipe(void)</span><br><span class="line">   &#125;</span><br><span class="line">   return 0;</span><br><span class="line"> &#125;</span><br><span class="line"><span class="addition">+int</span></span><br><span class="line"><span class="addition">+sys_symlink(void)</span></span><br><span class="line"><span class="addition">+&#123;</span></span><br><span class="line"><span class="addition">+  char target[MAXPATH], path[MAXPATH];</span></span><br><span class="line"><span class="addition">+  struct inode *ip;</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+  memset(target, 0, sizeof(target));</span></span><br><span class="line"><span class="addition">+  memset(path, 0, sizeof(target));</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+  if(argstr(0, target, MAXPATH) &lt; 0 || argstr(1, path, MAXPATH) &lt; 0)</span></span><br><span class="line"><span class="addition">+    return -1;</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+  begin_op();</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+  // create symbolic link inode</span></span><br><span class="line"><span class="addition">+  if((ip = create(path, T_SYMLINK, 0, 0)) == 0)</span></span><br><span class="line"><span class="addition">+    goto bad;</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+  // store the target path of a symbolic link in the inode's data blocks</span></span><br><span class="line"><span class="addition">+  if(writei(ip, 0, (uint64)target, 0, MAXPATH) != MAXPATH)</span></span><br><span class="line"><span class="addition">+    goto bad;</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+  iunlockput(ip);</span></span><br><span class="line"><span class="addition">+  end_op();</span></span><br><span class="line"><span class="addition">+  return 0;</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+bad:</span></span><br><span class="line"><span class="addition">+  end_op();</span></span><br><span class="line"><span class="addition">+  return -1;</span></span><br><span class="line"><span class="addition">+&#125;</span></span><br><span class="line">diff --git a/user/user.h b/user/user.h</span><br><span class="line">index b71ecda..883ef48 100644</span><br><span class="line"><span class="comment">--- a/user/user.h</span></span><br><span class="line"><span class="comment">+++ b/user/user.h</span></span><br><span class="line">@@ -23,6 +23,7 @@ int getpid(void);</span><br><span class="line"> char* sbrk(int);</span><br><span class="line"> int sleep(int);</span><br><span class="line"> int uptime(void);</span><br><span class="line"><span class="addition">+int symlink(char *, char *);</span></span><br><span class="line"> </span><br><span class="line"> // ulib.c</span><br><span class="line"> int stat(const char*, struct stat*);</span><br><span class="line">diff --git a/user/usys.pl b/user/usys.pl</span><br><span class="line">index 01e426e..bc5c22e 100755</span><br><span class="line"><span class="comment">--- a/user/usys.pl</span></span><br><span class="line"><span class="comment">+++ b/user/usys.pl</span></span><br><span class="line">@@ -36,3 +36,4 @@ entry("getpid");</span><br><span class="line"> entry("sbrk");</span><br><span class="line"> entry("sleep");</span><br><span class="line"> entry("uptime");</span><br><span class="line"><span class="addition">+entry("symlink");</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      </div>
+      
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/xv6-labs/">xv6-labs</a>
+            </div>
+        
+        <nav class="post-nav"><a class="next" href="/2021/04/29/Lab8-Locks/">
+        <span class="next-text nav-default">Lab Locks</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:zhouliqi1204@gmail.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://twitter.com/ML_zhouliqi" target="_blank" rel="noopener" class="iconfont icon-twitter" title="twitter"></a>
+        <a href="https://github.com/zhouliqi" target="_blank" rel="noopener" class="iconfont icon-github" title="github"></a>
+        <a href="https://www.zhihu.com/people/zhou-li-qi-78" target="_blank" rel="noopener" class="iconfont icon-zhihu" title="zhihu"></a>
+        <a href="https://instagram.com/zhou_liqi" target="_blank" rel="noopener" class="iconfont icon-instagram" title="instagram"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2020 - 2021<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">xiaozhou</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>
