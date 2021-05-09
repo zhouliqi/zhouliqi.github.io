@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="Lab Networking"/><meta name="keywords" content="xv6-labs, 陪你倒数's blog" /><link rel="alternate" href="/default" title="陪你倒数's blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="http://yoursite.com/2021/05/09/Lab11-Networking/"/>
+
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" /><script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?6539a88b962d52ff1bf51dd22e11cce2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":"","latex":true};
+</script>
+
+    <title>Lab Networking - 陪你倒数's blog</title>
+  <meta name="generator" content="Hexo 4.2.1"></head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">陪你倒数's blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">陪你倒数's blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/categories/">
+            分类
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">Lab Networking
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2021-05-09
+        </span><span class="post-category">
+            <a href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/">课程学习</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Lab-networking"><span class="toc-text">Lab: networking</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#查看相关代码"><span class="toc-text">查看相关代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#e1000-transmit"><span class="toc-text">e1000_transmit</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#e1000-recv"><span class="toc-text">e1000_recv</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#测试"><span class="toc-text">测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Diff"><span class="toc-text">Diff</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div><div class="post-content"><blockquote>
+<p>本文记录了 Lab: networking 的解题过程</p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="Lab-networking"><a href="#Lab-networking" class="headerlink" title="Lab: networking"></a><a href="https://pdos.csail.mit.edu/6.828/2020/labs/net.html" target="_blank" rel="noopener">Lab: networking</a></h1><h2 id="查看相关代码"><a href="#查看相关代码" class="headerlink" title="查看相关代码"></a>查看相关代码</h2><ul>
+<li><em>kernel/net.h<em>，</em>kernel/net.c</em></li>
+<li><em>kernel/e1000_dev.h<em>，</em>kernel/e1000.c</em></li>
+</ul>
+<hr>
+<h2 id="e1000-transmit"><a href="#e1000-transmit" class="headerlink" title="e1000_transmit"></a>e1000_transmit</h2><ul>
+<li>按照实验指导页面的 Hints，已经很详细了，跟着一步步做</li>
+<li>记得获取/释放锁</li>
+</ul>
+<hr>
+<h2 id="e1000-recv"><a href="#e1000-recv" class="headerlink" title="e1000_recv"></a>e1000_recv</h2><p><strong>Q1</strong>：一开始用 e1000_recv 函数只读取一个 mbuf，然后测试的时候过不了</p>
+<p><strong>A1</strong>：我们需要在一次中断时，就把所有到达的数据都处理掉。</p>
+<p><strong>Q2</strong>：在测试多线程那个函数时一直有问题</p>
+<p><strong>A1</strong>：看了一下网上其他人的解释，有两种做法</p>
+<ul>
+<li><code>e1000_recv</code> 可以不加锁，处理完一个<code>recv</code> 前，下一个<code>recv</code> 会被阻塞住。</li>
+<li><code>e1000_recv</code> 不可以和 <code>e1000_transmit</code> 用同一把锁，如果 <code>recv</code> 接收到一个 ARP 包，会在<code>recv</code> 内部发送 ARP 响应包，从而调用 <code>e1000_transmit</code>，两者用同一把锁就死锁了，因此需要两把锁。</li>
+</ul>
+<p>其他的跟着 Hints 做就行了</p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make qemu</span><br><span class="line">nettests</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make grade</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Diff"><a href="#Diff" class="headerlink" title="Diff"></a>Diff</h3><figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">diff --git a/kernel/e1000.c b/kernel/e1000.c</span><br><span class="line">index 70a2adf..88e021d 100644</span><br><span class="line"><span class="comment">--- a/kernel/e1000.c</span></span><br><span class="line"><span class="comment">+++ b/kernel/e1000.c</span></span><br><span class="line">@@ -103,6 +103,33 @@ e1000_transmit(struct mbuf *m)</span><br><span class="line">   // a pointer so that it can be freed after sending.</span><br><span class="line">   //</span><br><span class="line">   </span><br><span class="line"><span class="addition">+  acquire(&amp;e1000_lock);</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+  // First ask the E1000 for the TX ring index at which it's expecting the next packet</span></span><br><span class="line"><span class="addition">+  int tail = regs[E1000_TDT];</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+  // Then whether the E1000 have finished the corresponding previous</span></span><br><span class="line"><span class="addition">+  // transmission request, if no, then return an error</span></span><br><span class="line"><span class="addition">+  if((tx_ring[tail].status &amp; E1000_TXD_STAT_DD) == 0)&#123;</span></span><br><span class="line"><span class="addition">+    release(&amp;e1000_lock);</span></span><br><span class="line"><span class="addition">+    return -1;</span></span><br><span class="line"><span class="addition">+  &#125;</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+  // Otherwish free the last mbuf if there was one</span></span><br><span class="line"><span class="addition">+  if(tx_mbufs[tail])&#123;</span></span><br><span class="line"><span class="addition">+    mbuffree(tx_mbufs[tail]);</span></span><br><span class="line"><span class="addition">+  &#125;</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+  // Then fill in the descriptor</span></span><br><span class="line"><span class="addition">+  tx_ring[tail].addr = (uint64) m-&gt;head;</span></span><br><span class="line"><span class="addition">+  tx_ring[tail].length = m-&gt;len;</span></span><br><span class="line"><span class="addition">+  tx_ring[tail].cmd = E1000_TXD_CMD_RS | E1000_TXD_CMD_EOP;</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+  tx_mbufs[tail] = m;</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+  // Finally, update the ring position</span></span><br><span class="line"><span class="addition">+  regs[E1000_TDT] = (tail + 1) % TX_RING_SIZE;</span></span><br><span class="line"><span class="addition">+  release(&amp;e1000_lock);</span></span><br><span class="line">   return 0;</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line">@@ -115,6 +142,30 @@ e1000_recv(void)</span><br><span class="line">   // Check for packets that have arrived from the e1000</span><br><span class="line">   // Create and deliver an mbuf for each packet (using net_rx()).</span><br><span class="line">   //</span><br><span class="line"><span class="addition">+  while(1)&#123;</span></span><br><span class="line"><span class="addition">+    // First fetching the E1000_RDT control register</span></span><br><span class="line"><span class="addition">+    // and adding one modulo RX_RING_SIZE</span></span><br><span class="line"><span class="addition">+    int tail = (regs[E1000_RDT] + 1) % RX_RING_SIZE;</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+    // Then check if a new packet is available</span></span><br><span class="line"><span class="addition">+    if((rx_ring[tail].status &amp; E1000_RXD_STAT_DD) == 0)&#123;</span></span><br><span class="line"><span class="addition">+      return;</span></span><br><span class="line"><span class="addition">+    &#125;</span></span><br><span class="line"><span class="addition">+    // Otherwise, update the mbuf's m-&gt;len to the length reported in the descriptor</span></span><br><span class="line"><span class="addition">+    // Deliver the mbuf to the network stack using net_rx()</span></span><br><span class="line"><span class="addition">+    rx_mbufs[tail]-&gt;len = rx_ring[tail].length;</span></span><br><span class="line"><span class="addition">+    net_rx(rx_mbufs[tail]);</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+    // Then allocate a new mbuf using mbufalloc() to replace the one just given to net_rx()</span></span><br><span class="line"><span class="addition">+    // Program its data pointer (m-&gt;head) into the descriptor. Clear the descriptor's status bits to zero</span></span><br><span class="line"><span class="addition">+    rx_mbufs[tail] = mbufalloc(0);</span></span><br><span class="line"><span class="addition">+    if(!rx_mbufs[tail])</span></span><br><span class="line"><span class="addition">+      panic("e1000_recv");</span></span><br><span class="line"><span class="addition">+    rx_ring[tail].addr = (uint64) rx_mbufs[tail]-&gt;head;</span></span><br><span class="line"><span class="addition">+    rx_ring[tail].status = 0;</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+    regs[E1000_RDT] = tail;</span></span><br><span class="line"><span class="addition">+  &#125;</span></span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> void</span><br><span class="line">diff --git a/packets.pcap b/packets.pcap</span><br><span class="line">index 82d353e..58bcc0f 100644</span><br><span class="line">Binary files a/packets.pcap and b/packets.pcap differ</span><br></pre></td></tr></table></figure>
+
+
+      </div>
+      
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/xv6-labs/">xv6-labs</a>
+            </div>
+        
+        <nav class="post-nav"><a class="next" href="/2021/05/05/Lab10-mmap/">
+        <span class="next-text nav-default">Lab mmap</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:zhouliqi1204@gmail.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://twitter.com/ML_zhouliqi" target="_blank" rel="noopener" class="iconfont icon-twitter" title="twitter"></a>
+        <a href="https://github.com/zhouliqi" target="_blank" rel="noopener" class="iconfont icon-github" title="github"></a>
+        <a href="https://www.zhihu.com/people/zhou-li-qi-78" target="_blank" rel="noopener" class="iconfont icon-zhihu" title="zhihu"></a>
+        <a href="https://instagram.com/zhou_liqi" target="_blank" rel="noopener" class="iconfont icon-instagram" title="instagram"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2020 - 2021<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">xiaozhou</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>
