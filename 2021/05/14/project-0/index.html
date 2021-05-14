@@ -13,8 +13,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
-<link rel="alternate" href="/default" title="陪你倒数's blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
-<link rel="canonical" href="http://yoursite.com/page/2/"/>
+<meta name="description" content="C++ primer"/><meta name="keywords" content="CMU 15-455/645, 陪你倒数's blog" /><link rel="alternate" href="/default" title="陪你倒数's blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="http://yoursite.com/2021/05/14/project-0/"/>
 
 <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" /><script type="text/x-mathjax-config">
     MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
@@ -48,7 +48,7 @@
   window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":"","latex":true};
 </script>
 
-    <title>陪你倒数's blog</title>
+    <title>C++ primer - 陪你倒数's blog</title>
   <meta name="generator" content="Hexo 4.2.1"></head>
 
   <body><div id="mobile-navbar" class="mobile-navbar">
@@ -115,141 +115,89 @@
 
       <main id="main" class="main">
         <div class="content-wrapper">
-          <div id="content" class="content"><section id="posts" class="posts"><article class="post">
+          <div id="content" class="content"><article class="post">
     <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2021/04/01/Lab2-System-Calls/">Lab system calls</a>
+      <h1 class="post-title">C++ primer
         </h1>
 
       <div class="post-meta">
         <span class="post-time">
-          2021-04-01
+          2021-05-14
         </span><span class="post-category">
             <a href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/">课程学习</a>
             </span>
         </div>
     </header>
 
-    <div class="post-content"><blockquote>
-<p>本文记录了 Lab: system calls 的解题过程。</p>
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#PROJECT-0-C-PRIMER"><span class="toc-text">PROJECT #0 - C++ PRIMER</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Matrix"><span class="toc-text">Matrix</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RowMatrix"><span class="toc-text">RowMatrix</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RowMatrixOperations"><span class="toc-text">RowMatrixOperations</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试"><span class="toc-text">测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码格式验证"><span class="toc-text">代码格式验证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#打包提交"><span class="toc-text">打包提交</span></a></li></ol></li></ol>
+    </div>
+  </div><div class="post-content"><blockquote>
+<p>本文记录了 PROJECT #0 - C++ PRIMER 的解题过程</p>
 </blockquote>
-          <div class="read-more">
-            <a href="/2021/04/01/Lab2-System-Calls/" class="read-more-link">阅读更多</a>
-          </div>
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2021/03/28/Lab1-Xv6-and-Utilities/">Lab Xv6 and Unix utilities</a>
-        </h1>
+<a id="more"></a>
 
-      <div class="post-meta">
-        <span class="post-time">
-          2021-03-28
-        </span><span class="post-category">
-            <a href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/">课程学习</a>
-            </span>
-        </div>
-    </header>
-
-    <div class="post-content"><blockquote>
-<p>本文记录了 Labs：Xv6 and Unix utilities 的解题过程。</p>
+<h1 id="PROJECT-0-C-PRIMER"><a href="#PROJECT-0-C-PRIMER" class="headerlink" title="PROJECT #0 - C++ PRIMER"></a><a href="https://15445.courses.cs.cmu.edu/fall2020/project0/" target="_blank" rel="noopener">PROJECT #0 - C++ PRIMER</a></h1><blockquote>
+<p>实现一些简单的矩阵操作，编写 TODO 下面的代码</p>
 </blockquote>
-          <div class="read-more">
-            <a href="/2021/03/28/Lab1-Xv6-and-Utilities/" class="read-more-link">阅读更多</a>
-          </div>
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2021/03/17/MIT6-S081%E5%AE%9E%E9%AA%8C%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">MIT6.S081实验环境配置</a>
-        </h1>
+<p>注，请先了解 C++ 的知识</p>
+<ol>
+<li>模版类</li>
+<li>虚函数</li>
+<li>C++ 的类和继承</li>
+<li>智能指针 <code>unique_ptr</code></li>
+<li><code>std::move()</code> 的用法</li>
+</ol>
+<h2 id="Matrix"><a href="#Matrix" class="headerlink" title="Matrix"></a>Matrix</h2><ul>
+<li>在构造函数中对 <code>rows</code>，<code>cols</code> 进行赋值，然后为 <code>linear</code> 指针分配 $r*c$ 大小的数组</li>
+<li>在析构函数中释放分配给 <code>linear</code> 的空间</li>
+</ul>
+<h2 id="RowMatrix"><a href="#RowMatrix" class="headerlink" title="RowMatrix"></a>RowMatrix</h2><ul>
+<li>在构造函数中给 <code>data_</code> 分配一个行指针数组，然后初始化指针的值</li>
+<li><code>MatImport</code> 函数会通过数组 <code>arr</code> 来设置矩阵对应的值，<code>arr</code> 的大小会等于  $r*c$</li>
+<li>在析构函数中释放分配给 <code>data_</code> 的空间</li>
+<li>注：访问父类 <code>Matrix</code> 的保护成员时，需要加上 <code>this</code> 指针才能访问</li>
+</ul>
+<h2 id="RowMatrixOperations"><a href="#RowMatrixOperations" class="headerlink" title="RowMatrixOperations"></a>RowMatrixOperations</h2><ul>
+<li>实现矩阵的加、乘、GEMM 操作</li>
+<li>会用到 <code>std::move()</code> 函数对 <code>unique_ptr</code> 进行操作</li>
+</ul>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><ul>
+<li>去掉 <em>test/primer/starter_test.cpp</em> 中的 DISABLED_</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> build</span><br><span class="line">make starter_test</span><br><span class="line">./<span class="built_in">test</span>/starter_test</span><br></pre></td></tr></table></figure>
 
-      <div class="post-meta">
-        <span class="post-time">
-          2021-03-17
-        </span><span class="post-category">
-            <a href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/">课程学习</a>
-            </span>
-        </div>
-    </header>
 
-    <div class="post-content"><blockquote>
-<p>本文记录了搭建 6.S081：Operating System Engineering 课程的实验环境</p>
-</blockquote>
-          <div class="read-more">
-            <a href="/2021/03/17/MIT6-S081%E5%AE%9E%E9%AA%8C%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" class="read-more-link">阅读更多</a>
-          </div>
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2020/08/01/%E8%80%83%E7%A0%94%E7%BB%8F%E9%AA%8C/">考研经验</a>
-        </h1>
 
-      <div class="post-meta">
-        <span class="post-time">
-          2020-08-01
-        </span><span class="post-category">
-            <a href="/categories/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%B4%BB/">记录生活</a>
-            </span>
-        </div>
-    </header>
+<h2 id="代码格式验证"><a href="#代码格式验证" class="headerlink" title="代码格式验证"></a>代码格式验证</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">make format</span><br><span class="line">make check-lint</span><br><span class="line">make check-clang-tidy</span><br></pre></td></tr></table></figure>
 
-    <div class="post-content"><blockquote>
-<p>分享考研期间等一些经验及感悟</p>
-</blockquote>
-          <div class="read-more">
-            <a href="/2020/08/01/%E8%80%83%E7%A0%94%E7%BB%8F%E9%AA%8C/" class="read-more-link">阅读更多</a>
-          </div>
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2020/07/18/use-karam/">karam的使用</a>
-        </h1>
 
-      <div class="post-meta">
-        <span class="post-time">
-          2020-07-18
-        </span><span class="post-category">
-            <a href="/categories/%E5%B7%A5%E5%85%B7%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%BD%BF%E7%94%A8/">工具配置及使用</a>
-            </span>
-        </div>
-    </header>
 
-    <div class="post-content"><blockquote>
-<p>本篇教程介绍如何将数据库的数据导入Karam，生成RDF</p>
-<p>注意：如果不连VPN，图片可能显示不出来。</p>
-</blockquote>
-          <div class="read-more">
-            <a href="/2020/07/18/use-karam/" class="read-more-link">阅读更多</a>
-          </div>
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2020/07/11/hello-2020/">Welcome to xiaozhou's Blog</a>
-        </h1>
+<h2 id="打包提交"><a href="#打包提交" class="headerlink" title="打包提交"></a>打包提交</h2><ul>
+<li>打包代码</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zip project0-submission.zip src/include/primer/p0_starter.h</span><br></pre></td></tr></table></figure>
 
-      <div class="post-meta">
-        <span class="post-time">
-          2020-07-11
-        </span><span class="post-author">
-          / xiao zhou
-        </span>
-        <span class="post-category">
-            <a href="/categories/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%B4%BB/">记录生活</a>
-            </span>
-        </div>
-    </header>
+<ul>
+<li>然后前往 <strong><a href="https://www.gradescope.com" target="_blank" rel="noopener">https://www.gradescope.com</a></strong> 提交代码</li>
+</ul>
 
-    <div class="post-content"><blockquote>
-<p>“永远年轻，永远热泪盈眶。”</p>
-</blockquote>
-          <div class="read-more">
-            <a href="/2020/07/11/hello-2020/" class="read-more-link">阅读更多</a>
-          </div>
-        </div></article>
-      <nav class="pagination"><a class="prev" href="/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text">上一页</span>
+      </div>
+      
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/CMU-15-455-645/">CMU 15-455/645</a>
+            </div>
+        
+        <nav class="post-nav"><a class="next" href="/2021/05/09/Lab11-Networking/">
+        <span class="next-text nav-default">Lab Networking</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
       </a>
-    </nav></section></div></div>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
       </main>
 
       <footer id="footer" class="footer"><div class="social-links"><a href="mailto:zhouliqi1204@gmail.com" class="iconfont icon-email" title="email"></a>
