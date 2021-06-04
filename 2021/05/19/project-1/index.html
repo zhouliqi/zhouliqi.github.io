@@ -151,7 +151,7 @@
 </blockquote>
 <h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><ul>
 <li>使用 <code>std::list&lt;frame_id_t&gt; lru</code> 双链表的数据结构来添加可以被淘汰的页面</li>
-<li>使用 <code>std::unordered_map&lt;frame_id_t, std::list&lt;int&gt;::iterator&gt; mp</code> 来加速 <code>frame</code> 的查找和删除</li>
+<li>使用 <code>std::unordered_map&lt;frame_id_t, std::list&lt;frame_id_t&gt;::iterator&gt; mp</code> 来加速 <code>frame</code> 的查找和删除</li>
 <li>使用 <code>std::mutex latch_;</code> 来支持多线程</li>
 </ul>
 <p>使用 <code>std::lock_guard&lt;std::mutex&gt; guard(latch_);</code> 语句，在构造 <code>guard</code> 时会自动调用 <code>latch_.lock()</code> 加锁，并且在 <code>guard</code> 析构的时候自动调用 <code>latch_.unlock()</code> 释放锁。</p>
@@ -176,6 +176,7 @@
 <li><code>page_table_</code> 可以根据 <code>page_id</code> 找到对应的 <code>frame_id</code></li>
 <li><code>pages_</code> 指向了一个 <code>Page</code> 数组，我们会用 <code>frame_id</code> 来找到某一个 <code>Page</code> 对象</li>
 <li>在 <code>UnpinPageImpl</code> 函数中，如果 <code>page_id</code> 不在 <code>page_table_</code> 中，我们应该返回 <code>true</code>，而不是 <code>false</code>；还有就是只有当 <code>is_dirty</code> 为 <code>true</code> 时，我们才设置 <code>Page</code> 的 <code>is_dirty_</code></li>
+<li>在 <code>DeletePageImpl(page_id_t page_id)</code> 中，除了把 <code>page_id</code> 对应的页从 <code>page_table_</code> 移除，还需要调用 <code>Pin</code> 将该页从 <code>replacer_</code> 中移除</li>
 </ul>
 <hr>
 <h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make lru_replacer_test</span><br><span class="line">./<span class="built_in">test</span>/lru_replacer_test</span><br></pre></td></tr></table></figure>
@@ -204,7 +205,12 @@
             <a href="/tags/CMU-15-455-645/">CMU 15-455/645</a>
             </div>
         
-        <nav class="post-nav"><a class="next" href="/2021/05/14/project-0/">
+        <nav class="post-nav"><a class="prev" href="/2021/06/04/project-2/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">B+TREE INDEX</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2021/05/14/project-0/">
         <span class="next-text nav-default">C++ primer</span>
         <span class="prev-text nav-mobile">下一篇</span>
         <i class="iconfont icon-right"></i>
