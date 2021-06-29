@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="CONCURRENCY CONTROL"/><meta name="keywords" content="CMU 15-455/645, 陪你倒数's blog" /><link rel="alternate" href="/default" title="陪你倒数's blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="http://yoursite.com/2021/06/29/project-4/"/>
+
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" /><script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?6539a88b962d52ff1bf51dd22e11cce2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":"","latex":true};
+</script>
+
+    <title>CONCURRENCY CONTROL - 陪你倒数's blog</title>
+  <meta name="generator" content="Hexo 4.2.1"></head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">陪你倒数's blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">陪你倒数's blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/categories/">
+            分类
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">CONCURRENCY CONTROL
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2021-06-29
+        </span><span class="post-category">
+            <a href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/">课程学习</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#PROJECT-4-CONCURRENCY-CONTROL"><span class="toc-text">PROJECT #4 - CONCURRENCY CONTROL</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#TASK-1-LOCK-MANAGER"><span class="toc-text">TASK #1 - LOCK MANAGER</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TASK-2-DEADLOCK-DETECTION"><span class="toc-text">TASK #2 - DEADLOCK DETECTION</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TASK-3-CONCURRENT-QUERY-EXECUTION"><span class="toc-text">TASK #3 - CONCURRENT QUERY EXECUTION</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试-验证-打包"><span class="toc-text">测试&#x2F;验证&#x2F;打包</span></a></li></ol></li></ol>
+    </div>
+  </div><div class="post-content"><blockquote>
+<p>本文记录了 PROJECT #4 - CONCURRENCY CONTROL 的解题过程</p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="PROJECT-4-CONCURRENCY-CONTROL"><a href="#PROJECT-4-CONCURRENCY-CONTROL" class="headerlink" title="PROJECT #4 - CONCURRENCY CONTROL"></a><a href="https://15445.courses.cs.cmu.edu/fall2020/project4/" target="_blank" rel="noopener">PROJECT #4 - CONCURRENCY CONTROL</a></h1><blockquote>
+<p>这个 project 主要是实现数据库的锁管理（Lock Manager），并且支持并发查询执行。LM 负责管理事务发出的 tuple-level 锁，并且 LM 还有基于事务的隔离级别实现 Shared &amp; Exclusive 锁的授予和释放。</p>
+</blockquote>
+<ul>
+<li><a href="https://15445.courses.cs.cmu.edu/fall2020/project4/#lock_manager" target="_blank" rel="noopener"><strong>Task #1 - Lock Manager</strong></a></li>
+<li><a href="https://15445.courses.cs.cmu.edu/fall2020/project4/#deadlock_detection" target="_blank" rel="noopener"><strong>Task #2 - Deadlock Detection</strong></a></li>
+<li><a href="https://15445.courses.cs.cmu.edu/fall2020/project4/#execution_engine" target="_blank" rel="noopener"><strong>Task #3 - Concurrent Query Execution</strong></a></li>
+</ul>
+<h2 id="TASK-1-LOCK-MANAGER"><a href="#TASK-1-LOCK-MANAGER" class="headerlink" title="TASK #1 - LOCK MANAGER"></a>TASK #1 - LOCK MANAGER</h2><p>下面主要是 LM 需要实现的函数的思路，注意每个调用下面的每个函数应该先获得 LM 的 <code>latch_</code>。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">LockManager::LockShared</span><span class="params">(Transaction *txn, <span class="keyword">const</span> RID &amp;rid)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Note that: READ UNCOMMITTED no S-Lock.</span></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 1. Checking txn state. Txn should abort if its state isn't growing.</span></span><br><span class="line"><span class="comment">     * 2. Append lock request to this RID request queue. If the rid exist X-Lock previous, </span></span><br><span class="line"><span class="comment">     *	  then txn blocked(lock_table_[rid].cv_.wait()). Otherwise S-Lock can granted.</span></span><br><span class="line"><span class="comment">     * 3. The S-Lock request is granted.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">LockManager::LockExclusive</span><span class="params">(Transaction *txn, <span class="keyword">const</span> RID &amp;rid)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Note that: READ UNCOMMITTED no S-Lock.</span></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 1. Checking txn state. Txn should abort if its state isn't growing.</span></span><br><span class="line"><span class="comment">     * 2. Append lock request to this RID request queue. If the rid exist S/X-Lock previous,</span></span><br><span class="line"><span class="comment">     *	  then txn blocked. Otherwise X-Lock can granted.</span></span><br><span class="line"><span class="comment">     * 3. X-Lock can be acquired only if txn in front of queue. Otherwise, it will be blocked.</span></span><br><span class="line"><span class="comment">     * 4. the X-Lock request is granted.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">LockManager::LockUpgrade</span><span class="params">(Transaction *txn, <span class="keyword">const</span> RID &amp;rid)</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 1.1 Checking txn state. Txn should abort if txn's state isn't growing.</span></span><br><span class="line"><span class="comment">     * 1.2 Whether another txn already ready upgrading.</span></span><br><span class="line"><span class="comment">     * 2. find correct postion to upgrade S-Lock to X-Lock</span></span><br><span class="line"><span class="comment">     * 3. Update txn request lock message.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">LockManager::Unlock</span><span class="params">(Transaction *txn, <span class="keyword">const</span> RID &amp;rid)</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 1. If txn doesn't have any this tuple lock, then return false.</span></span><br><span class="line"><span class="comment">     * 2. Delete this txn in request queue, and release tuple lock hold by txn.</span></span><br><span class="line"><span class="comment">     * 3. txn's state is growing when txn release lock, then set txn state is shrinking,</span></span><br><span class="line"><span class="comment">     *	  so txn can't acquire any lock. Note that: it is used in REPEATABLE READS isolation level</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="TASK-2-DEADLOCK-DETECTION"><a href="#TASK-2-DEADLOCK-DETECTION" class="headerlink" title="TASK #2 - DEADLOCK DETECTION"></a>TASK #2 - DEADLOCK DETECTION</h2><ol>
+<li>为了检测死锁的事务，首先应该构建一个 wait for graph。</li>
+<li>然后运行 DFS 判断环的算法检测图中是否存在环。</li>
+</ol>
+<p>如果发现死锁的事务，将它 Aborted 后，如何通知其他事务继续获得 tuple-lock 呢？这里采用了群友提供的思路</p>
+<blockquote>
+<ol>
+<li>进入条件变量等待时，使用哈希表保存 <code>txn_id_t -&gt; RID</code> 的映射。</li>
+<li>找到死锁节点后，设置为 Aborted，唤醒 <code>txn_id_t</code> 对应的 RID 请求队列，唤醒后进行状态检查。如果事务的状态的 Aborted，那么抛出异常。</li>
+</ol>
+</blockquote>
+<hr>
+<h2 id="TASK-3-CONCURRENT-QUERY-EXECUTION"><a href="#TASK-3-CONCURRENT-QUERY-EXECUTION" class="headerlink" title="TASK #3 - CONCURRENT QUERY EXECUTION"></a>TASK #3 - CONCURRENT QUERY EXECUTION</h2><ul>
+<li>对于 SeqScan：如果隔离级别是 <code>READ_UNCOMMITTED</code>，则不需要加锁；如果隔离级别是 <code>READ_COMMITTED</code> 和 <code>REPEATABLE_READ</code>，则访问某个 RID 时需要对它加 <code>S-Lock</code></li>
+<li>对于 Delete 和 Update：如果当前 RID 拥有 <code>S-Lock</code>，则需要将 <code>S-Lock</code> 升级为 <code>X-Lock</code>，否则对这个 RID 加 <code>X-Lock</code></li>
+</ul>
+<hr>
+<h2 id="测试-验证-打包"><a href="#测试-验证-打包" class="headerlink" title="测试/验证/打包"></a>测试/验证/打包</h2><ul>
+<li>测试</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> build</span><br><span class="line">make lock_manager_test</span><br><span class="line">make transaction_test</span><br><span class="line">./<span class="built_in">test</span>/lock_manager_test</span><br><span class="line">./<span class="built_in">test</span>/transaction_test</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>格式验证</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">make format</span><br><span class="line">make check-lint</span><br><span class="line">make check-clang-tidy</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>打包</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">zip project4-submission.zip src&#x2F;include&#x2F;buffer&#x2F;lru_replacer.h src&#x2F;buffer&#x2F;lru_replacer.cpp \</span><br><span class="line">	src&#x2F;include&#x2F;buffer&#x2F;buffer_pool_manager.h src&#x2F;buffer&#x2F;buffer_pool_manager.cpp \</span><br><span class="line">	src&#x2F;include&#x2F;storage&#x2F;page&#x2F;b_plus_tree_page.h src&#x2F;storage&#x2F;page&#x2F;b_plus_tree_page.cpp \</span><br><span class="line">	src&#x2F;include&#x2F;storage&#x2F;page&#x2F;b_plus_tree_internal_page.h src&#x2F;storage&#x2F;page&#x2F;b_plus_tree_internal_page.cpp \</span><br><span class="line">	src&#x2F;include&#x2F;storage&#x2F;page&#x2F;b_plus_tree_leaf_page.h src&#x2F;storage&#x2F;page&#x2F;b_plus_tree_leaf_page.cpp \</span><br><span class="line">	src&#x2F;include&#x2F;storage&#x2F;index&#x2F;b_plus_tree.h src&#x2F;storage&#x2F;index&#x2F;b_plus_tree.cpp \</span><br><span class="line">	src&#x2F;include&#x2F;storage&#x2F;index&#x2F;index_iterator.h src&#x2F;storage&#x2F;index&#x2F;index_iterator.cpp \</span><br><span class="line">	src&#x2F;include&#x2F;catalog&#x2F;catalog.h src&#x2F;include&#x2F;execution&#x2F;execution_engine.h src&#x2F;include&#x2F;storage&#x2F;index&#x2F;index.h \</span><br><span class="line">	src&#x2F;include&#x2F;execution&#x2F;executor_factory.h src&#x2F;execution&#x2F;executor_factory.cpp \</span><br><span class="line">	src&#x2F;include&#x2F;execution&#x2F;executors&#x2F;seq_scan_executor.h src&#x2F;execution&#x2F;seq_scan_executor.cpp \</span><br><span class="line">	src&#x2F;include&#x2F;execution&#x2F;executors&#x2F;index_scan_executor.h src&#x2F;execution&#x2F;index_scan_executor.cpp \</span><br><span class="line">	src&#x2F;include&#x2F;execution&#x2F;executors&#x2F;insert_executor.h src&#x2F;execution&#x2F;insert_executor.cpp \</span><br><span class="line">	src&#x2F;include&#x2F;execution&#x2F;executors&#x2F;update_executor.h src&#x2F;execution&#x2F;update_executor.cpp \</span><br><span class="line">	src&#x2F;include&#x2F;execution&#x2F;executors&#x2F;delete_executor.h src&#x2F;execution&#x2F;delete_executor.cpp \</span><br><span class="line">	src&#x2F;include&#x2F;execution&#x2F;executors&#x2F;nested_loop_join_executor.h src&#x2F;execution&#x2F;nested_loop_join_executor.cpp \</span><br><span class="line">	src&#x2F;include&#x2F;execution&#x2F;executors&#x2F;nested_index_join_executor.h src&#x2F;execution&#x2F;nested_index_join_executor.cpp \</span><br><span class="line">	src&#x2F;include&#x2F;execution&#x2F;executors&#x2F;limit_executor.h src&#x2F;execution&#x2F;limit_executor.cpp \</span><br><span class="line">	src&#x2F;include&#x2F;execution&#x2F;executors&#x2F;aggregation_executor.h src&#x2F;execution&#x2F;aggregation_executor.cpp \</span><br><span class="line">	src&#x2F;include&#x2F;storage&#x2F;index&#x2F;b_plus_tree_index.h src&#x2F;storage&#x2F;index&#x2F;b_plus_tree_index.cpp \</span><br><span class="line">	src&#x2F;concurrency&#x2F;lock_manager.cpp src&#x2F;include&#x2F;concurrency&#x2F;lock_manager.h</span><br></pre></td></tr></table></figure>
+
+<p>然后前往 <strong><a href="https://www.gradescope.com" target="_blank" rel="noopener">https://www.gradescope.com</a></strong> 提交代码</p>
+
+      </div>
+      
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/CMU-15-455-645/">CMU 15-455/645</a>
+            </div>
+        
+        <nav class="post-nav"><a class="next" href="/2021/06/16/project-3/">
+        <span class="next-text nav-default">QUERY EXECUTION</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:zhouliqi1204@gmail.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://twitter.com/ML_zhouliqi" target="_blank" rel="noopener" class="iconfont icon-twitter" title="twitter"></a>
+        <a href="https://github.com/zhouliqi" target="_blank" rel="noopener" class="iconfont icon-github" title="github"></a>
+        <a href="https://www.zhihu.com/people/zhou-li-qi-78" target="_blank" rel="noopener" class="iconfont icon-zhihu" title="zhihu"></a>
+        <a href="https://instagram.com/zhou_liqi" target="_blank" rel="noopener" class="iconfont icon-instagram" title="instagram"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2020 - 2021<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">xiaozhou</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>
