@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="Lab0：networking warmup"/><meta name="keywords" content="CS144, 陪你倒数's blog" /><link rel="alternate" href="/default" title="陪你倒数's blog"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="http://yoursite.com/2021/07/04/CS144-Lab-0/"/>
+
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" /><script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?6539a88b962d52ff1bf51dd22e11cce2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":"","latex":true};
+</script>
+
+    <title>Lab0：networking warmup - 陪你倒数's blog</title>
+  <meta name="generator" content="Hexo 4.2.1"></head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">陪你倒数's blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">陪你倒数's blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/categories/">
+            分类
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">Lab0：networking warmup
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2021-07-04
+        </span><span class="post-category">
+            <a href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/">课程学习</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Lab-0-networking-warmup"><span class="toc-text">Lab 0: networking warmup</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Task-1：Writing-webget"><span class="toc-text">Task #1：Writing webget</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Task-2：An-in-memory-reliable-byte-stream"><span class="toc-text">Task #2：An in-memory reliable byte stream</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试"><span class="toc-text">测试</span></a></li></ol></li></ol>
+    </div>
+  </div><div class="post-content"><blockquote>
+<p>本文记录了 Lab 0: networking warmup 的实验过程</p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="Lab-0-networking-warmup"><a href="#Lab-0-networking-warmup" class="headerlink" title="Lab 0: networking warmup"></a><a href="https://cs144.github.io/assignments/lab0.pdf" target="_blank" rel="noopener">Lab 0: networking warmup</a></h1><blockquote>
+<p>热身性质的 Lab，不算太难，这里就主要记录一下两个 task 的一些思路</p>
+</blockquote>
+<h2 id="Task-1：Writing-webget"><a href="#Task-1：Writing-webget" class="headerlink" title="Task #1：Writing webget"></a>Task #1：Writing webget</h2><blockquote>
+<p>这个任务的目的是使用 OS 提供的 TCP 和 stream-socket 来获取因特网上的 Web 页面。</p>
+</blockquote>
+<p>因为前面的实验指导书已经教了你如何使用终端命令来获取 cs144.keithw.org 中的 <code>/hello</code>；因此我们的代码就按照这个思路来做。在实现之前需要看一下这几个类：<code>FileDescriptor</code>，<code>Socket</code> ，<code>TCPSocket</code> 和 <code>Address</code></p>
+<ul>
+<li>使用 <code>write</code> 函数将需要请求的内容发送给 server</li>
+<li>注意在我们发送完请求信息时需要立刻关闭，使用 <code>shutdown(SHUT_WR)</code></li>
+<li>获取完 server 返回的信息后需要调用 <code>close()</code></li>
+</ul>
+<p>大概也就十行代码左右吧</p>
+<hr>
+<h2 id="Task-2：An-in-memory-reliable-byte-stream"><a href="#Task-2：An-in-memory-reliable-byte-stream" class="headerlink" title="Task #2：An in-memory reliable byte stream"></a>Task #2：An in-memory reliable byte stream</h2><p>由于要求你自己添加 ByteStream 的私有成员变量，因此你需要了解一下 Lab 需要我们实现的各个接口的作用。下面给出一个我的实现</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">deque</span>&lt;<span class="keyword">char</span>&gt; _ring; <span class="comment">//!&lt; store byte stream.</span></span><br><span class="line"><span class="keyword">size_t</span> _capacity&#123;&#125;;     <span class="comment">//!&lt; the maximun number of bytes.</span></span><br><span class="line"><span class="keyword">bool</span> _eof;              <span class="comment">//!&lt; `true` if the output has reached the ending.</span></span><br><span class="line"><span class="keyword">size_t</span> _total_read&#123;<span class="number">0</span>&#125;;  <span class="comment">//!&lt; Total number of bytes popped.</span></span><br><span class="line"><span class="keyword">size_t</span> _total_write&#123;<span class="number">0</span>&#125;; <span class="comment">//!&lt; Total number of bytes written.</span></span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是：<code>eof()</code> 函数只有当 <code>input_ended()</code> 和 <code>buffer_empty()</code> 都返回真时才返回真</p>
+<hr>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make -j4</span><br><span class="line">make check_lab0</span><br></pre></td></tr></table></figure>
+
+
+      </div>
+      
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/CS144/">CS144</a>
+            </div>
+        
+        <nav class="post-nav"><a class="next" href="/2021/06/29/15-445-project-4/">
+        <span class="next-text nav-default">CONCURRENCY CONTROL</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:zhouliqi1204@gmail.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://twitter.com/ML_zhouliqi" target="_blank" rel="noopener" class="iconfont icon-twitter" title="twitter"></a>
+        <a href="https://github.com/zhouliqi" target="_blank" rel="noopener" class="iconfont icon-github" title="github"></a>
+        <a href="https://www.zhihu.com/people/zhou-li-qi-78" target="_blank" rel="noopener" class="iconfont icon-zhihu" title="zhihu"></a>
+        <a href="https://instagram.com/zhou_liqi" target="_blank" rel="noopener" class="iconfont icon-instagram" title="instagram"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2020 - 2021<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">xiaozhou</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>
